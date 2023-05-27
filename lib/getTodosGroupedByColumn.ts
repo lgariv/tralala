@@ -1,13 +1,12 @@
-import { databases } from "@/appwrite"
+"use client"
+
+import { pb } from "@/pocketbase"
 
 export const getTodosGroupedByColumn = async() => {
-    const data = await databases.listDocuments(
-		process.env.NEXT_PUBLIC_DATABASE_ID!,
-		process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!
-    );
+    const todos = await pb.collection("todos").getFullList({
+		sort: "-created",
+	});;
     
-    const todos = data.documents;
-
     const columns = todos.reduce((acc, todo) => {
         if (!acc.get(todo.status)) {
             acc.set(todo.status, {
@@ -17,8 +16,8 @@ export const getTodosGroupedByColumn = async() => {
         }
 
         acc.get(todo.status)!.todos.push({
-			$id: todo.$id,
-			$createdAt: todo.$createdAt,
+			id: todo.id,
+			createdAt: todo.createdAt,
 			title: todo.title,
             status: todo.status,
             ...(todo.image && {image: JSON.parse(todo.image)})

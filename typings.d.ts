@@ -10,14 +10,9 @@ interface Column {
 }
 
 interface Todo {
-    $id: string;
-    $createdAt: string;
+    id: string;
+    createdAt: string;
     title: string;
     status: TypedColumn;
-    image?: string;
-}
-
-interface Image {
-    bucketId: string;
-    fileId: string;
+    name: string;
 }
