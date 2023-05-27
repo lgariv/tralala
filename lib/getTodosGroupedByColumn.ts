@@ -1,6 +1,6 @@
 "use client"
 
-import { pb } from "@/pocketbase"
+import { pb } from "@/lib/pocketbase"
 
 export const getTodosGroupedByColumn = async() => {
     const todos = await pb.collection("todos").getFullList({
