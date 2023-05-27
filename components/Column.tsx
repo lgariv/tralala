@@ -21,12 +21,12 @@ function Column({ id, todos, index }: Props) {
     const [searchString] = useBoardStore((state) => [state.searchString]);
 
 	return (
-		<Draggable draggableId={id} index={index}>
-			{(provided) => (
+		// <Draggable draggableId={id} index={index}>
+		// 	{(provided) => (
 				<div
-					{...provided.draggableProps}
-					{...provided.dragHandleProps}
-					ref={provided.innerRef}
+					// {...provided.draggableProps}
+					// {...provided.dragHandleProps}
+					// ref={provided.innerRef}
 				>
 					{/* render droppable todos in the column */}
 					<Droppable droppableId={index.toString()} type="card">
@@ -82,8 +82,8 @@ function Column({ id, todos, index }: Props) {
 						)}
 					</Droppable>
 				</div>
-			)}
-		</Draggable>
+		// 	)}
+		// </Draggable>
 	);
 }
 
