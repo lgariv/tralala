@@ -11,7 +11,6 @@ interface Column {
 
 interface Todo {
     id: string;
-    createdAt: string;
     title: string;
     status: TypedColumn;
     name: string;
