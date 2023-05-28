@@ -15,7 +15,7 @@ export async function GET(request: Request) {
 			);
 		`;
 		const names = ["Take my dog out", "inprogress", "Lavie"];
-		await client.sql`INSERT INTO todos (title, status, name) VALUES (${names[0]}, ${names[1]}, ${names[2]});`;
+		await client.sql`INSERT INTO todos (title, status, name) VALUES ('Take my dog out', 'inprogress', 'Lavie');`;
 	} catch (error) {
 		return NextResponse.json({ error });
 	}

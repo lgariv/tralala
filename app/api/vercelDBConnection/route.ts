@@ -10,23 +10,39 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
 	const client = await db.connect();
-    const body = await request.json();
-	const todoID: string = body["id"];
-    const todoTitle: string = body["title"];
-    const todoColumn: string = body["status"];
+	const body = await request.json();
+	if (body["requestType"].includes("update")) {
+		const todoID: string = body["id"];
+		const todoTitle: string = body["title"];
+		const todoColumn: string = body["status"];
 
-	try {
-        await client.sql`
-			UPDATE todos
-			SET title = ${todoTitle}, status = ${todoColumn}
-			WHERE id = ${todoID};
-		`;
-	} catch (error) {
-		return NextResponse.json({ error });
+		try {
+			await client.sql`
+				UPDATE todos
+				SET title = ${todoTitle}, status = ${todoColumn}
+				WHERE id = ${todoID};
+			`;
+		} catch (error) {
+			return NextResponse.json({ error });
+		}
+
+		const todos = await client.sql`SELECT * FROM todos;`;
+		return NextResponse.json({ todos });
+	} else {
+		const todoID: string = body["id"];
+
+		try {
+			await client.sql`
+				DELETE FROM todos
+				WHERE id = ${todoID};
+			`;
+		} catch (error) {
+			return NextResponse.json({ error });
+		}
+
+		const todos = await client.sql`SELECT * FROM todos;`;
+		return NextResponse.json({ todos });
 	}
-
-	const todos = await client.sql`SELECT * FROM todos;`;
-	return NextResponse.json({ todos });
 	// return new Response(JSON.stringify("success"), {
 	// 	status: 200,
 	// 	headers: {
