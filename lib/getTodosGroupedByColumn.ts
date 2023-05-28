@@ -6,9 +6,6 @@ export const getTodosGroupedByColumn = async () => {
     });
     const todosJson = await todosRes.json();
     const todos = todosJson["todos"]["rows"];
-    // const todos = await pb.collection("todos").getFullList({
-	// 	sort: "-created",
-    // });
     
     console.log(`todos :: ${JSON.stringify(todos)}`);
     

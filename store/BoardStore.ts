@@ -1,4 +1,3 @@
-import { pb } from "@/lib/pocketbase";
 import { getTodosGroupedByColumn } from "@/lib/getTodosGroupedByColumn";
 import { create } from "zustand";
 
@@ -29,9 +28,18 @@ export const useBoardStore = create<BoardState>((set) => ({
 	setBoardState: (board) => set({ board }),
 
 	updateTodoInDB: async (todo, columnId) => {
-		await pb.collection("todos").update(todo.id, {
+		const raw = JSON.stringify({
+			id: todo.id,
 			title: todo.title,
 			status: columnId,
+		});
+
+		await fetch("/api/updateDBTodoRow", {
+			body: raw,
+			headers: {
+				"Content-Type": "application/json"
+			},
+			method: 'POST'
 		});
 	},
 
