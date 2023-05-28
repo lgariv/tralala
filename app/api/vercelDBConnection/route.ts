@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
 		const todos = await client.sql`SELECT * FROM todos;`;
 		return NextResponse.json({ todos });
-	} else {
+	} else if (body["requestType"].includes("delete")) {
 		const todoID: string = body["id"];
 
 		try {
@@ -36,6 +36,19 @@ export async function POST(request: Request) {
 				DELETE FROM todos
 				WHERE id = ${todoID};
 			`;
+		} catch (error) {
+			return NextResponse.json({ error });
+		}
+
+		const todos = await client.sql`SELECT * FROM todos;`;
+		return NextResponse.json({ todos });
+	} else if (body["requestType"].includes("create")) {
+		const todoTitle: string = body["title"];
+		const todoColumn: string = body["status"];
+		const todoName: string = body["name"];
+
+		try {
+			await client.sql`INSERT INTO todos (title, status, name) VALUES (${todoTitle}, ${todoColumn}, ${todoName});`;
 		} catch (error) {
 			return NextResponse.json({ error });
 		}

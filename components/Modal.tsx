@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { FormEvent, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useModalStore } from "@/store/ModalStore";
 import { useBoardStore } from "@/store/BoardStore";
@@ -10,19 +10,43 @@ function Modal() {
 	const [isOpen, closeModal] = useModalStore((state) => [
 		state.isOpen,
 		state.closeModal,
-    ]);
-    const [newTaskInput, setNewTaskInput, newTaskPerformerInput, setNewTaskPerformerInput] =
-		useBoardStore((state) => [
-			state.newTaskInput,
-			state.setNewTaskInput,
-			state.newTaskPerformerInput,
-			state.setNewTaskPerformerInput,
-		]);
+	]);
+	const [
+		addTask,
+		newTaskInput,
+		setNewTaskInput,
+		newTaskPerformerInput,
+		setNewTaskPerformerInput,
+		newTaskType,
+	] = useBoardStore((state) => [
+		state.addTask,
+		state.newTaskInput,
+		state.setNewTaskInput,
+		state.newTaskPerformerInput,
+		state.setNewTaskPerformerInput,
+		state.newTaskType,
+	]);
+
+	const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (!newTaskInput || !newTaskPerformerInput) return;
+
+		// add task
+		addTask(newTaskInput, newTaskType, newTaskPerformerInput);
+		setNewTaskInput("");
+		setNewTaskPerformerInput("");
+		closeModal();
+	}
 
 	return (
 		// Use the `Transition` component at the root level
 		<Transition appear show={isOpen} as={Fragment}>
-			<Dialog as="form" className="relative z-10" onClose={closeModal}>
+			<Dialog
+				as="form"
+				onSubmit={handleSubmit}
+				className="relative z-10"
+				onClose={closeModal}
+			>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"
@@ -73,11 +97,23 @@ function Modal() {
 										type="text"
 										value={newTaskPerformerInput}
 										onChange={(e) =>
-											setNewTaskPerformerInput(e.target.value)
+											setNewTaskPerformerInput(
+												e.target.value
+											)
 										}
 										placeholder="Who's performing the task?"
 										className="w-full border border-gray-300 rounded-md outline-none p-5"
 									/>
+								</div>
+
+								<div className="pt-4">
+									<button
+										type="submit"
+										disabled={!newTaskInput}
+										className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed "
+									>
+										Add Task
+									</button>
 								</div>
 							</Dialog.Panel>
 						</Transition.Child>

@@ -15,6 +15,7 @@ interface BoardState {
 	newTaskType: TypedColumn;
 	setNewTaskType: (columnId: TypedColumn) => void;
 	deleteTask: (todoId: Todo) => void;
+	addTask: (todo: string, columnId: TypedColumn, taskPerformer: string) => void;
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
@@ -61,7 +62,7 @@ export const useBoardStore = create<BoardState>((set) => ({
 	deleteTask: async (todo: Todo) => {
 		const raw = JSON.stringify({
 			requestType: "delete",
-			id: todo.id
+			id: todo.id,
 		});
 
 		await fetch("/api/vercelDBConnection", {
@@ -75,4 +76,23 @@ export const useBoardStore = create<BoardState>((set) => ({
 		const board = await getTodosGroupedByColumn();
 		set({ board });
 	},
+	addTask: async (todo: string, columnId: TypedColumn, taskPerformer: string) => {
+		const raw = JSON.stringify({
+			requestType: "create",
+			title: todo,
+			status: columnId,
+			name: taskPerformer,
+		});
+
+		await fetch("/api/vercelDBConnection", {
+			body: raw,
+			headers: {
+				"Content-Type": "application/json",
+			},
+			method: "POST",
+		});
+
+		const board = await getTodosGroupedByColumn();
+		set({ board });
+	}
 }));
