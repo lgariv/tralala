@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
 export const getTodosGroupedByColumn = async () => {
-    const todosRes = await fetch("/api/getFullDBList", {
+	const todosRes = await fetch("/api/vercelDBConnection", {
 		method: "GET",
-    });
-    const todosJson = await todosRes.json();
-    const todos: Array<Todo> = todosJson["todos"]["rows"];
-    
-    const columns = todos.reduce((acc, todo) => {
+	});
+	const todosJson = await todosRes.json();
+	const todos: Array<Todo> = todosJson["todos"]["rows"];
+
+	const columns = todos.reduce((acc, todo) => {
 		if (!acc.get(todo.status)) {
 			acc.set(todo.status, {
 				id: todo.status,
@@ -25,27 +25,27 @@ export const getTodosGroupedByColumn = async () => {
 		return acc;
 	}, new Map<TypedColumn, Column>());
 
-    // if columns doesnt have inprogress, todo and done, add them with empty todos
-    const columnTypes: TypedColumn[] = ["todo", "inprogress", "done"];
-    for (const columnType of columnTypes) {
-        if (!columns.get(columnType)) {
-            columns.set(columnType, {
-                id: columnType,
-                todos: [],
-            })
-        }
-    }
-    
-    // sort columns by column types
-    const sortedColumns = new Map(
+	// if columns doesnt have inprogress, todo and done, add them with empty todos
+	const columnTypes: TypedColumn[] = ["todo", "inprogress", "done"];
+	for (const columnType of columnTypes) {
+		if (!columns.get(columnType)) {
+			columns.set(columnType, {
+				id: columnType,
+				todos: [],
+			});
+		}
+	}
+
+	// sort columns by column types
+	const sortedColumns = new Map(
 		Array.from(columns.entries()).sort(
 			(a, b) => columnTypes.indexOf(a[0]) - columnTypes.indexOf(b[0])
 		)
-    );
+	);
 
-    const board: Board = {
+	const board: Board = {
 		columns: sortedColumns,
 	};
 
-    return board;
-}
+	return board;
+};

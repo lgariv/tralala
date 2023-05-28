@@ -34,12 +34,12 @@ export const useBoardStore = create<BoardState>((set) => ({
 			status: columnId,
 		});
 
-		await fetch("/api/updateDBTodoRow", {
+		await fetch("/api/vercelDBConnection", {
 			body: raw,
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
-			method: 'POST'
+			method: "POST",
 		});
 	},
 
