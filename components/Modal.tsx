@@ -11,10 +11,13 @@ function Modal() {
 		state.isOpen,
 		state.closeModal,
     ]);
-    const [newTaskInput, setNewTaskInput] = useBoardStore((state) => [
-		state.newTaskInput,
-		state.setNewTaskInput,
-	]);
+    const [newTaskInput, setNewTaskInput, newTaskPerformerInput, setNewTaskPerformerInput] =
+		useBoardStore((state) => [
+			state.newTaskInput,
+			state.setNewTaskInput,
+			state.newTaskPerformerInput,
+			state.setNewTaskPerformerInput,
+		]);
 
 	return (
 		// Use the `Transition` component at the root level
@@ -50,6 +53,7 @@ function Modal() {
 								>
 									Add a Task
 								</Dialog.Title>
+
 								<div className="mt-2">
 									<input
 										type="text"
@@ -63,6 +67,18 @@ function Modal() {
 								</div>
 
 								<TaskTypeRadioGroup />
+
+								<div>
+									<input
+										type="text"
+										value={newTaskPerformerInput}
+										onChange={(e) =>
+											setNewTaskPerformerInput(e.target.value)
+										}
+										placeholder="Who's performing the task?"
+										className="w-full border border-gray-300 rounded-md outline-none p-5"
+									/>
+								</div>
 							</Dialog.Panel>
 						</Transition.Child>
 					</div>

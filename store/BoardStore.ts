@@ -11,8 +11,10 @@ interface BoardState {
 	setSearchString: (searchString: string) => void;
 	newTaskInput: string;
 	setNewTaskInput: (newTaskInput: string) => void;
+	newTaskPerformerInput: string;
+	setNewTaskPerformerInput: (newTaskPerformerInput: string) => void;
 	newTaskType: TypedColumn;
-    setNewTaskType: (columnId: TypedColumn) => void;
+	setNewTaskType: (columnId: TypedColumn) => void;
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
@@ -39,6 +41,9 @@ export const useBoardStore = create<BoardState>((set) => ({
 	newTaskInput: "",
 	setNewTaskInput: (newTaskInput) => set({ newTaskInput }),
 
+	newTaskPerformerInput: "",
+	setNewTaskPerformerInput: (newTaskPerformerInput) => set({ newTaskPerformerInput }),
+
 	newTaskType: "todo",
-    setNewTaskType: (columnId: TypedColumn) => set({ newTaskType: columnId }),
+	setNewTaskType: (columnId: TypedColumn) => set({ newTaskType: columnId }),
 }));
