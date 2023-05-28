@@ -33,8 +33,11 @@ function TodoCard({
 			{...dragHandleProps}
 			ref={innerRef}
 		>
-			<div className="flex justify-between items-center p-5">
-				<p>{todo.title}</p>
+			<div className="flex justify-between items-center px-4 py-2">
+				<div>
+					<p>{todo.title}</p>
+					<p className="text-gray-400 text-xs">{todo.name}</p>
+				</div>
 				<button
 					className="text-red-500 hover:text-red-600"
 					onClick={() => deleteTask(todo)}
