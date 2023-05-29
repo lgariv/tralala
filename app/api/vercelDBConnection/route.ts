@@ -1,15 +1,26 @@
-import { db } from "@vercel/postgres";
 import { NextResponse } from "next/server";
+import pg from "pg";
+
+const { Client } = pg;
+
+const client = new Client({
+	connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+});
+
+client.connect((err) => {
+	if (err) {
+		console.error("connection error", err.stack);
+	} else {
+		console.log("connected");
+	}
+});
 
 export async function GET(request: Request) {
-	const client = await db.connect();
-
-	const todos = await client.sql`SELECT * FROM todos ORDER BY id ASC;`;
+	const todos = await client.query('SELECT * FROM todos ORDER BY id ASC');
 	return NextResponse.json({ todos });
 }
 
 export async function POST(request: Request) {
-	const client = await db.connect();
 	const body = await request.json();
 	if (body["requestType"].includes("update")) {
 		const todoID: string = body["id"];
@@ -17,30 +28,30 @@ export async function POST(request: Request) {
 		const todoColumn: string = body["status"];
 
 		try {
-			await client.sql`
+			await client.query(`
 				UPDATE todos
-				SET title = ${todoTitle}, status = ${todoColumn}
-				WHERE id = ${todoID};
-			`;
+				SET title = '${todoTitle}', status = '${todoColumn}'
+				WHERE id = '${todoID}';
+			`);
 		} catch (error) {
 			return NextResponse.json({ error });
 		}
 
-		const todos = await client.sql`SELECT * FROM todos;`;
+		const todos = await client.query("SELECT * FROM todos ORDER BY id ASC");
 		return NextResponse.json({ todos });
 	} else if (body["requestType"].includes("delete")) {
 		const todoID: string = body["id"];
 
 		try {
-			await client.sql`
+			client.query(`
 				DELETE FROM todos
-				WHERE id = ${todoID};
-			`;
+				WHERE id = '${todoID}';
+			`);
 		} catch (error) {
 			return NextResponse.json({ error });
 		}
 
-		const todos = await client.sql`SELECT * FROM todos;`;
+		const todos = await client.query(`SELECT * FROM todos;`);
 		return NextResponse.json({ todos });
 	} else if (body["requestType"].includes("create")) {
 		const todoTitle: string = body["title"];
@@ -48,20 +59,12 @@ export async function POST(request: Request) {
 		const todoName: string = body["name"];
 
 		try {
-			await client.sql`INSERT INTO todos (title, status, name) VALUES (${todoTitle}, ${todoColumn}, ${todoName});`;
+			client.query(`INSERT INTO todos (title, status, name) VALUES ('${todoTitle}', '${todoColumn}', '${todoName}');`);
 		} catch (error) {
 			return NextResponse.json({ error });
 		}
 
-		const todos = await client.sql`SELECT * FROM todos;`;
+		const todos = await client.query(`SELECT * FROM todos;`);
 		return NextResponse.json({ todos });
 	}
-	// return new Response(JSON.stringify("success"), {
-	// 	status: 200,
-	// 	headers: {
-	// 		"Access-Control-Allow-Origin": "*",
-	// 		"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-	// 		"Access-Control-Allow-Headers": "Content-Type, Authorization",
-	// 	},
-	// });
 }
