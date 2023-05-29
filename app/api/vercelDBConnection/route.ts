@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
-import pg from "pg";
-
-const { Client } = pg;
+import { useBoardStore } from "@/store/BoardStore";
+import { Client } from "pg";
 
 const client = new Client({
 	connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+	ssl: {
+		rejectUnauthorized: false,
+	},
 });
 
 client.connect((err) => {
@@ -13,6 +15,16 @@ client.connect((err) => {
 	} else {
 		console.log("connected");
 	}
+});
+
+client.query("LISTEN table_changes");
+
+// const tableChanged = useBoardStore((state) => state.tableChanged);
+
+client.on("notification", (msg) => {
+	console.log(msg.channel); // foo
+	console.log(msg.payload); // bar!
+	// tableChanged();
 });
 
 export async function GET(request: Request) {

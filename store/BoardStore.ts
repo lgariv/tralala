@@ -1,5 +1,6 @@
 import { getTodosGroupedByColumn } from "@/lib/getTodosGroupedByColumn";
 import { create } from "zustand";
+import { Client } from "pg";
 
 interface BoardState {
 	board: Board;
@@ -16,6 +17,7 @@ interface BoardState {
 	setNewTaskType: (columnId: TypedColumn) => void;
 	deleteTask: (todoId: Todo) => void;
 	addTask: (todo: string, columnId: TypedColumn, taskPerformer: string) => void;
+	tableChanged: () => void;
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
@@ -92,6 +94,11 @@ export const useBoardStore = create<BoardState>((set) => ({
 			method: "POST",
 		});
 
+		const board = await getTodosGroupedByColumn();
+		set({ board });
+	},
+
+	tableChanged: async () => {
 		const board = await getTodosGroupedByColumn();
 		set({ board });
 	}

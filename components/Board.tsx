@@ -17,6 +17,12 @@ function Board() {
 
 	useEffect(() => {
 		getBoard();
+
+		const intervalId = setInterval(() => {
+			getBoard();
+		}, 60000);
+
+		return () => clearInterval(intervalId);
 	}, []);
 
 	const handleOnDragEnd = (result: DropResult) => {
