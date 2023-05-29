@@ -1,7 +1,7 @@
 "use client";
 
 import { useBoardStore } from "@/store/BoardStore";
-import { XCircleIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/solid";
 import {
 	DraggableProvidedDragHandleProps,
 	DraggableProvidedDraggableProps,
@@ -39,10 +39,10 @@ function TodoCard({
 					<p className="text-gray-400 text-xs">{todo.name}</p>
 				</div>
 				<button
-					className="text-red-500 hover:text-red-600"
+					className="text-gray-500 hover:text-red-600"
 					onClick={() => deleteTask(todo)}
 				>
-					<XCircleIcon className="ml-5 h-8 w-8" />
+					<TrashIcon className="ml-5 h-6 w-6" />
 				</button>
 			</div>
 
