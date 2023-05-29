@@ -13,9 +13,9 @@ type Props = {
 const idToColumnText: {
     [key in TypedColumn]: string;
 } = {
-    todo: "To Do",
-    inprogress: "In Progress",
-    done: "Done",
+    todo: "משימות",
+    inprogress: "בביצוע",
+    done: "בוצע",
 }
 
 function Column({ id, todos, index }: Props) {

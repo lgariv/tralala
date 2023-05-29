@@ -49,8 +49,9 @@ function Header() {
 					<form className="flex items-center space-x-5 bg-white rounded-md p-2 shadow-mx flex-1 md:flex-initial">
 						<MagnifyingGlassIcon className="h-6 w-6 text-gray-400" />
 						<input
+							dir="rtl"
 							type="text"
-							placeholder="Search"
+							placeholder="חיפוש"
 							onChange={(e) => setSearchString(e.target.value)}
 							className="flex-1 outline-none p-2"
 						/>
@@ -65,11 +66,13 @@ function Header() {
 			<div className="flex items-center justify-center px-5 py-2 md:py-5">
 				<p className="flex items-center p-5 text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1]">
 					<UserCircleIcon
-						className={`inline-block h-10 w-10 text-[#0055D1] mr-1 ${loading && "animate-spin"}`}
+						className={`inline-block h-10 w-10 text-[#0055D1] mr-1 ${
+							loading && "animate-spin"
+						}`}
 					/>
 					{loading
-					? "Summarising you tasks for the day..."
-					: `Welcome Zira! Welcome to the tralala app! Here's a summary
+						? "Summarising you tasks for the day..."
+						: `Welcome Zira! Welcome to the tralala app! Here's a summary
 					of your to-dos: You have ${todosCount} to-do, ${inProgressCount} in progress, and ${doneCount} done
 					task. Have a productive day!`}
 				</p>

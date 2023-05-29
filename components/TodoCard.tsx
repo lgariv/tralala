@@ -42,7 +42,7 @@ function TodoCard({
 					className="text-gray-500 hover:text-red-600"
 					onClick={() => deleteTask(todo)}
 				>
-					<TrashIcon className="ml-5 h-6 w-6" />
+					<TrashIcon className="mr-4 h-6 w-6" />
 				</button>
 			</div>
 
