@@ -59,7 +59,7 @@ function Modal() {
 					<div className="fixed inset-0 bg-black bg-opacity-25" />
 				</Transition.Child>
 
-				<div className="fixed inset-0 overflow-y-auto">
+				<div dir="rtl" className="fixed inset-0 overflow-y-auto">
 					<div className="flex min-h-full items-center justify-center p-4 text-center">
 						<Transition.Child
 							as={Fragment}
@@ -73,9 +73,9 @@ function Modal() {
 							<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
 								<Dialog.Title
 									as="h3"
-									className="text-lg font-medium leading-6 text-gray-900 pb-2"
+									className="text-lg text-start font-medium leading-6 text-gray-900 pb-2"
 								>
-									Add a Task
+									הוסף משימה חדשה
 								</Dialog.Title>
 
 								<div className="mt-2">
@@ -85,7 +85,7 @@ function Modal() {
 										onChange={(e) =>
 											setNewTaskInput(e.target.value)
 										}
-										placeholder="Enter a task here..."
+										placeholder="הכנס משימה כאן..."
 										className="w-full border border-gray-300 rounded-md outline-none p-5"
 									/>
 								</div>
@@ -101,7 +101,7 @@ function Modal() {
 												e.target.value
 											)
 										}
-										placeholder="Who's performing the task?"
+										placeholder="מי מבצע את המשימה?"
 										className="w-full border border-gray-300 rounded-md outline-none p-5"
 									/>
 								</div>
@@ -112,7 +112,7 @@ function Modal() {
 										disabled={!newTaskInput || !newTaskPerformerInput}
 										className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed "
 									>
-										Add Task
+										הוסף משימה
 									</button>
 								</div>
 							</Dialog.Panel>

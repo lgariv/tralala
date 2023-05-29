@@ -8,20 +8,20 @@ import { CheckCircleIcon } from "@heroicons/react/24/solid";
 const types = [
 	{
 		id: "todo",
-		name: "Todo",
-		description: "A new task to be completed",
+		name: "משימות",
+		description: "משימה שיש להשלים",
 		color: "bg-red-500",
 	},
 	{
 		id: "inprogress",
-		name: "In Progress",
-		description: "A task that is currently being worked on",
+		name: "בביצוע",
+		description: "משימה שכרגע עובדים עליה",
 		color: "bg-yellow-500",
 	},
 	{
 		id: "done",
-		name: "Done",
-		description: "A task that has been completed",
+		name: "בוצע",
+		description: "משימה שבוצעה",
 		color: "bg-green-500",
 	},
 ];
@@ -33,7 +33,7 @@ const TaskTypeRadioGroup: React.FC = () => {
 	]);
 
 	return (
-		<div className="w-full py-5">
+		<div dir="rtl" className="w-full py-5">
 			<div className="mx-auto w-full max-w-md">
 				<RadioGroup
 					value={newTaskType}
@@ -45,24 +45,24 @@ const TaskTypeRadioGroup: React.FC = () => {
 								key={type.id}
 								value={type.id}
 								className={({ active, checked }) => `
-                ${
-					active
-						? "ring-2 ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-300"
-						: ""
-				}
-                ${
-					checked
-						? `${type.color} bg-opacity-75 text-white`
-						: "bg-white"
-				}
-                relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none
-                `}
+									${
+										active
+											? "ring-2 ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-300"
+											: ""
+									}
+									${
+										checked
+											? `${type.color} bg-opacity-75 text-white`
+											: "bg-white"
+									}
+									relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none
+									`}
 							>
 								{({ active, checked }) => (
 									<>
 										<div className="flex w-full items-center justify-between">
 											<div className="flex items-center">
-												<div className="text-sm">
+												<div className="text-sm text-start">
 													<RadioGroup.Label
 														as="p"
 														className={`font-medium ${
@@ -74,7 +74,7 @@ const TaskTypeRadioGroup: React.FC = () => {
 														{type.name}
 													</RadioGroup.Label>
 													<RadioGroup.Description
-														as="span"
+														as="p"
 														className={`inline ${
 															checked
 																? "text-white"
