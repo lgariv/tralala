@@ -11,19 +11,19 @@ type Props = {
 };
 
 const idToColumnText: {
-    [key in TypedColumn]: string;
+	[key in TypedColumn]: string;
 } = {
-    todo: "משימות",
-    inprogress: "בביצוע",
-    done: "בוצע",
-}
+	todo: "משימות",
+	inprogress: "בביצוע",
+	done: "בוצע",
+};
 
 function Column({ id, todos, index }: Props) {
-    const [searchString, setNewTaskType] = useBoardStore((state) => [
+	const [searchString, setNewTaskType] = useBoardStore((state) => [
 		state.searchString,
 		state.setNewTaskType,
 	]);
-    const [openModal] = useModalStore((state) => [state.openModal]);
+	const [openModal] = useModalStore((state) => [state.openModal]);
 
 	return (
 		// <Draggable draggableId={id} index={index}>
@@ -39,11 +39,20 @@ function Column({ id, todos, index }: Props) {
 					<span className="text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal">
 						{!searchString
 							? todos.length
-							: todos.filter((todo) =>
-									todo.title
-										.toLowerCase()
-										.includes(searchString.toLowerCase())
-							  ).length}
+							: todos.filter((todo) => {
+									return (
+										todo.title
+											.toLowerCase()
+											.includes(
+												searchString.toLowerCase()
+											) ||
+										todo.name
+											.toLowerCase()
+											.includes(
+												searchString.toLowerCase()
+											)
+									);
+							  }).length}
 					</span>
 				</h2>
 				{/* render droppable todos in the column */}
@@ -61,6 +70,11 @@ function Column({ id, todos, index }: Props) {
 											.toLowerCase()
 											.includes(
 												searchString.toLowerCase()
+											) &&
+										!todo.name
+											.toLowerCase()
+											.includes(
+												searchString.toLowerCase()
 											)
 									)
 										return null;
@@ -75,9 +89,7 @@ function Column({ id, todos, index }: Props) {
 													todo={todo}
 													index={index}
 													id={id}
-													innerRef={
-														provided.innerRef
-													}
+													innerRef={provided.innerRef}
 													draggableProps={
 														provided.draggableProps
 													}
