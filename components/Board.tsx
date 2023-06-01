@@ -20,7 +20,7 @@ function Board() {
 
 		const intervalId = setInterval(() => {
 			getBoard();
-		}, 60000);
+		}, 10000);
 
 		return () => clearInterval(intervalId);
 	}, []);
@@ -77,6 +77,9 @@ function Board() {
 				const newColumns = new Map(board.columns);
 				newColumns.set(startCol.id, newCol);
 
+				// Update in DB
+				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index);
+
 				setBoardState({ ...board, columns: newColumns });
 			} else {
 				// Dragging task to another column
@@ -96,7 +99,7 @@ function Board() {
 				});
 
 				// Update in DB
-				updateTodoInDB(todoMoved, finishCol.id);
+				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index);
 
 				setBoardState({ ...board, columns: newColumns });
 			}

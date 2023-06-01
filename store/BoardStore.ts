@@ -1,12 +1,13 @@
 import { getTodosGroupedByColumn } from "@/lib/getTodosGroupedByColumn";
 import { create } from "zustand";
 import { Client } from "pg";
+import TodoCard from "@/components/TodoCard";
 
 interface BoardState {
 	board: Board;
 	getBoard: () => void;
 	setBoardState: (board: Board) => void;
-	updateTodoInDB: (todo: Todo, columnId: TypedColumn) => void;
+	updateTodoInDB: (todo: Todo, oldStatus: TypedColumn, status: TypedColumn, oldPosition: number, position: number) => void;
 	searchString: string;
 	setSearchString: (searchString: string) => void;
 	newTaskInput: string;
@@ -38,12 +39,15 @@ export const useBoardStore = create<BoardState>((set) => ({
 
 	setBoardState: (board) => set({ board }),
 
-	updateTodoInDB: async (todo, columnId) => {
+	updateTodoInDB: async (todo, oldStatus, status, oldPosition, position) => {
 		const raw = JSON.stringify({
-			requestType: "update",
+			requestType: "updatePosition",
 			id: todo.id,
 			title: todo.title,
-			status: columnId,
+			oldStatus: oldStatus,
+			status: status,
+			oldPosition: oldPosition,
+			position: position,
 		});
 
 		await fetch("/api/vercelDBConnection", {
@@ -76,6 +80,8 @@ export const useBoardStore = create<BoardState>((set) => ({
 		const raw = JSON.stringify({
 			requestType: "delete",
 			id: todo.id,
+			oldStatus: todo.status,
+			oldPosition: todo.pos,
 		});
 
 		await fetch("/api/vercelDBConnection", {

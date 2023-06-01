@@ -15,4 +15,5 @@ interface Todo {
     status: TypedColumn;
     name: string;
     sender: string;
+    pos: number
 }

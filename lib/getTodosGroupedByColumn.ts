@@ -21,6 +21,7 @@ export const getTodosGroupedByColumn = async () => {
 			name: todo.name,
 			status: todo.status,
 			sender: todo.sender,
+			pos: todo.pos,
 		});
 
 		return acc;
@@ -43,6 +44,11 @@ export const getTodosGroupedByColumn = async () => {
 			(a, b) => columnTypes.indexOf(a[0]) - columnTypes.indexOf(b[0])
 		)
 	);
+
+	// Sort the todos within each column by the "pos" value
+	sortedColumns.forEach((column) => {
+		column.todos.sort((a, b) => a.pos - b.pos);
+	});
 
 	const board: Board = {
 		columns: sortedColumns,
