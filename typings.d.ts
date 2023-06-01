@@ -14,4 +14,5 @@ interface Todo {
     title: string;
     status: TypedColumn;
     name: string;
+    sender: string;
 }

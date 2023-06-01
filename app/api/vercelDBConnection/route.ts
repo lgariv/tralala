@@ -69,9 +69,10 @@ export async function POST(request: Request) {
 		const todoTitle: string = body["title"];
 		const todoColumn: string = body["status"];
 		const todoName: string = body["name"];
+		const todoSender: string = body["sender"];
 
 		try {
-			client.query(`INSERT INTO todos (title, status, name) VALUES ('${todoTitle}', '${todoColumn}', '${todoName}');`);
+			client.query(`INSERT INTO todos (title, status, name, sender) VALUES ('${todoTitle}', '${todoColumn}', '${todoName}', '${todoSender}');`);
 		} catch (error) {
 			return NextResponse.json({ error });
 		}

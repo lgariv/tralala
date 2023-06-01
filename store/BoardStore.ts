@@ -13,10 +13,17 @@ interface BoardState {
 	setNewTaskInput: (newTaskInput: string) => void;
 	newTaskPerformerInput: string;
 	setNewTaskPerformerInput: (newTaskPerformerInput: string) => void;
+	newTaskSubmitterInput: string;
+	setNewTaskSubmitterInput: (newTaskSubmitterInput: string) => void;
 	newTaskType: TypedColumn;
 	setNewTaskType: (columnId: TypedColumn) => void;
 	deleteTask: (todoId: Todo) => void;
-	addTask: (todo: string, columnId: TypedColumn, taskPerformer: string) => void;
+	addTask: (
+		todo: string,
+		columnId: TypedColumn,
+		taskPerformer: string,
+		taskSubmitter: string
+	) => void;
 	tableChanged: () => void;
 }
 
@@ -58,6 +65,10 @@ export const useBoardStore = create<BoardState>((set) => ({
 	setNewTaskPerformerInput: (newTaskPerformerInput) =>
 		set({ newTaskPerformerInput }),
 
+	newTaskSubmitterInput: "",
+	setNewTaskSubmitterInput: (newTaskSubmitterInput) =>
+		set({ newTaskSubmitterInput }),
+
 	newTaskType: "todo",
 	setNewTaskType: (columnId: TypedColumn) => set({ newTaskType: columnId }),
 
@@ -78,12 +89,18 @@ export const useBoardStore = create<BoardState>((set) => ({
 		const board = await getTodosGroupedByColumn();
 		set({ board });
 	},
-	addTask: async (todo: string, columnId: TypedColumn, taskPerformer: string) => {
+	addTask: async (
+		todo: string,
+		columnId: TypedColumn,
+		taskPerformer: string,
+		taskSubmitter: string
+	) => {
 		const raw = JSON.stringify({
 			requestType: "create",
 			title: todo,
 			status: columnId,
 			name: taskPerformer,
+			sender: taskSubmitter
 		});
 
 		await fetch("/api/vercelDBConnection", {
@@ -101,5 +118,5 @@ export const useBoardStore = create<BoardState>((set) => ({
 	tableChanged: async () => {
 		const board = await getTodosGroupedByColumn();
 		set({ board });
-	}
+	},
 }));

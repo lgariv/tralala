@@ -50,6 +50,11 @@ function Column({ id, todos, index }: Props) {
 											.toLowerCase()
 											.includes(
 												searchString.toLowerCase()
+											) ||
+										todo.sender
+											.toLowerCase()
+											.includes(
+												searchString.toLowerCase()
 											)
 									);
 							  }).length}
@@ -72,6 +77,11 @@ function Column({ id, todos, index }: Props) {
 												searchString.toLowerCase()
 											) &&
 										!todo.name
+											.toLowerCase()
+											.includes(
+												searchString.toLowerCase()
+											) &&
+										!todo.sender
 											.toLowerCase()
 											.includes(
 												searchString.toLowerCase()

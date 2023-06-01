@@ -36,7 +36,7 @@ function TodoCard({
 			<div className="flex justify-between items-center px-4 py-2">
 				<div>
 					<p>{todo.title}</p>
-					<p className="text-gray-400 text-xs">{todo.name}</p>
+					<p className="text-gray-400 text-xs">מאת: {todo.sender} • מבצע: {todo.name}</p>
 				</div>
 				<button
 					className="text-gray-500 hover:text-red-600"

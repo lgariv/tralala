@@ -18,6 +18,8 @@ function Modal() {
 		newTaskPerformerInput,
 		setNewTaskPerformerInput,
 		newTaskType,
+		newTaskSubmitterInput,
+		setNewTaskSubmitterInput,
 	] = useBoardStore((state) => [
 		state.addTask,
 		state.newTaskInput,
@@ -25,6 +27,8 @@ function Modal() {
 		state.newTaskPerformerInput,
 		state.setNewTaskPerformerInput,
 		state.newTaskType,
+		state.newTaskSubmitterInput,
+		state.setNewTaskSubmitterInput,
 	]);
 
 	const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
@@ -32,9 +36,10 @@ function Modal() {
 		if (!newTaskInput || !newTaskPerformerInput) return;
 
 		// add task
-		addTask(newTaskInput, newTaskType, newTaskPerformerInput);
+		addTask(newTaskInput, newTaskType, newTaskPerformerInput, newTaskSubmitterInput);
 		setNewTaskInput("");
 		setNewTaskPerformerInput("");
+		setNewTaskSubmitterInput("");
 		closeModal();
 	}
 
@@ -90,9 +95,7 @@ function Modal() {
 									/>
 								</div>
 
-								<TaskTypeRadioGroup />
-
-								<div>
+								<div className="mt-4">
 									<input
 										type="text"
 										value={newTaskPerformerInput}
@@ -106,10 +109,30 @@ function Modal() {
 									/>
 								</div>
 
+								<TaskTypeRadioGroup />
+
+								<div>
+									<input
+										type="text"
+										value={newTaskSubmitterInput}
+										onChange={(e) =>
+											setNewTaskSubmitterInput(
+												e.target.value
+											)
+										}
+										placeholder="המשימה ניתנה על ידי..."
+										className="w-full border border-gray-300 rounded-md outline-none p-5"
+									/>
+								</div>
+
 								<div className="pt-4">
 									<button
 										type="submit"
-										disabled={!newTaskInput || !newTaskPerformerInput}
+										disabled={
+											!newTaskInput ||
+											!newTaskPerformerInput ||
+											!newTaskSubmitterInput
+										}
 										className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed "
 									>
 										הוסף משימה

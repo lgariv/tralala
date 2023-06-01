@@ -20,6 +20,7 @@ export const getTodosGroupedByColumn = async () => {
 			title: todo.title,
 			name: todo.name,
 			status: todo.status,
+			sender: todo.sender,
 		});
 
 		return acc;
