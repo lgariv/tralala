@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import Avatar from "react-avatar";
 import { useBoardStore } from "@/store/BoardStore";
 import { useEffect, useState } from "react";
+import { UserButton } from "@clerk/nextjs";
 
 function Header() {
 	const [board, searchString, setSearchString] = useBoardStore((state) => [
@@ -59,7 +59,7 @@ function Header() {
 					</form>
 
 					{/* Avatar  */}
-					<Avatar name="Lavie" round size="50" color="#0055D1" />
+					<UserButton afterSignOutUrl="/"/>
 				</div>
 			</div>
 
