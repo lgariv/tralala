@@ -61,7 +61,7 @@ function Column({ id, todos, index, loading }: Props) {
 				</h2>
 				{/* render droppable todos in the column */}
 				<Droppable droppableId={index.toString()} type="card">
-					{(provided, snapshot) => (
+					{(provided) => (
 						<div
 							{...provided.droppableProps}
 							ref={provided.innerRef}
