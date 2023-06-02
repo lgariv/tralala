@@ -55,7 +55,7 @@ function Board() {
 		// Handle card drag
 		if (type === "card") {
 			// This step is needed as the indexes are stored as numbers 0,1,2 etc. instead of id's with DND library
-			const columns = Array.from(board.columns);			
+			const columns = Array.from(board.columns);
 			const startColIndex = columns[Number(source.droppableId)];
 			const finishColIndex = columns[Number(destination.droppableId)];
 
@@ -116,27 +116,18 @@ function Board() {
 	};
 
 	const dummyArray = [
-		[
-			"todo",
-			{
-				id: "todo",
-				todos: [],
-			},
-		],
-		[
-			"inprogress",
-			{
-				id: "inprogress",
-				todos: [],
-			},
-		],
-		[
-			"done",
-			{
-				id: "done",
-				todos: [],
-			},
-		],
+		{
+			id: "todo",
+			todos: [],
+		},
+		{
+			id: "inprogress",
+			todos: [],
+		},
+		{
+			id: "done",
+			todos: [],
+		},
 	];
 	
 	return loading ? (
@@ -149,10 +140,10 @@ function Board() {
 						{...provided.droppableProps}
 						ref={provided.innerRef}
 					>
-						{Array.from(dummyArray).map(([id, column], index) => (
+						{Array.from(dummyArray.entries()).map(([id, column], index) => (
 							<Column
 								key={id}
-								id={id}
+								id={column.id as TypedColumn}
 								todos={column.todos}
 								index={index}
 								loading={true}
