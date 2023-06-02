@@ -5,7 +5,6 @@ import { ArrowPathIcon, MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/r
 import { useBoardStore } from "@/store/BoardStore";
 import { useEffect, useState } from "react";
 import { UserButton } from "@clerk/nextjs";
-import Avatar from "react-avatar";
 
 function Header() {
 	const [board, searchString, setSearchString] = useBoardStore((state) => [
