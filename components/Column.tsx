@@ -1,4 +1,4 @@
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
 import { useBoardStore } from "@/store/BoardStore";
@@ -8,6 +8,7 @@ type Props = {
 	id: TypedColumn;
 	todos: Todo[];
 	index: number;
+	loading?: boolean;
 };
 
 const idToColumnText: {
@@ -18,7 +19,7 @@ const idToColumnText: {
 	done: "בוצע",
 };
 
-function Column({ id, todos, index }: Props) {
+function Column({ id, todos, index, loading }: Props) {
 	const [searchString, setNewTaskType] = useBoardStore((state) => [
 		state.searchString,
 		state.setNewTaskType,
@@ -37,27 +38,25 @@ function Column({ id, todos, index }: Props) {
 				<h2 className="flex justify-between font-bold text-xl p-2">
 					{idToColumnText[id]}
 					<span className="text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal">
-						{!searchString
-							? todos.length
-							: todos.filter((todo) => {
-									return (
-										todo.title
-											.toLowerCase()
-											.includes(
-												searchString.toLowerCase()
-											) ||
-										todo.name
-											.toLowerCase()
-											.includes(
-												searchString.toLowerCase()
-											) ||
-										todo.sender
-											.toLowerCase()
-											.includes(
-												searchString.toLowerCase()
-											)
-									);
-							  }).length}
+						{loading ? (
+							<ArrowPathIcon className="object-scale-down h-5 w-5 animate-spin" />
+						) : !searchString ? (
+							todos.length
+						) : (
+							todos.filter((todo) => {
+								return (
+									todo.title
+										.toLowerCase()
+										.includes(searchString.toLowerCase()) ||
+									todo.name
+										.toLowerCase()
+										.includes(searchString.toLowerCase()) ||
+									todo.sender
+										.toLowerCase()
+										.includes(searchString.toLowerCase())
+								);
+							}).length
+						)}
 					</span>
 				</h2>
 				{/* render droppable todos in the column */}

@@ -1,10 +1,11 @@
 "use client"
 
 import Image from "next/image";
-import { MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { ArrowPathIcon, MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useBoardStore } from "@/store/BoardStore";
 import { useEffect, useState } from "react";
 import { UserButton } from "@clerk/nextjs";
+import Avatar from "react-avatar";
 
 function Header() {
 	const [board, searchString, setSearchString] = useBoardStore((state) => [
@@ -32,11 +33,12 @@ function Header() {
 	
 
 	return (
-		<header>
+		<header className="pb-2 md:pb-5">
 			<div className="flex flex-col md:flex-row items-center p-5 bg-gray-500/10 rounded-b-2xl">
 				<div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-br from-pink-400 to-[#0055D1] rounded-md filter blur-3xl opacity-50 -z-50" />
 
 				<Image
+					priority={true}
 					src="/tralala.png"
 					alt="Tralala logo"
 					width={300}
@@ -59,11 +61,11 @@ function Header() {
 					</form>
 
 					{/* Avatar  */}
-					<UserButton afterSignOutUrl="/"/>
+					<UserButton afterSignOutUrl="/" />
 				</div>
 			</div>
 
-			<div className="flex items-center justify-center px-5 py-2 md:py-5">
+			{/* <div className="flex items-center justify-center px-5 py-2 md:py-5">
 				<p className="flex items-center p-5 text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1]">
 					<UserCircleIcon
 						className={`inline-block h-10 w-10 text-[#0055D1] mr-1 ${
@@ -76,7 +78,7 @@ function Header() {
 					of your to-dos: You have ${todosCount} to-do, ${inProgressCount} in progress, and ${doneCount} done
 					task. Have a productive day!`}
 				</p>
-			</div>
+			</div> */}
 		</header>
 	);
 }

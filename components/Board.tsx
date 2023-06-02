@@ -1,19 +1,28 @@
 "use client";
 
 import { useBoardStore } from "@/store/BoardStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import { useUser } from "@clerk/nextjs";
 import Column from "./Column";
 
 function Board() {
-	const [board, getBoard, setBoardState, updateTodoInDB] = useBoardStore(
+	const [board, getBoard, setBoardState, updateTodoInDB, setNewTaskSubmitterInput] = useBoardStore(
 		(state) => [
 			state.board,
 			state.getBoard,
 			state.setBoardState,
 			state.updateTodoInDB,
+			state.setNewTaskSubmitterInput
 		]
 	);
+	const { isLoaded, isSignedIn, user } = useUser();
+	const [loading, setLoading] = useState<boolean>(true);
+
+	useEffect(() => {
+		if (user) setNewTaskSubmitterInput(user["firstName"] !== "זירה" ? user["firstName"]! : "");
+		setLoading(board.columns.size === 0);
+	}, [isLoaded, isSignedIn, board]);
 
 	useEffect(() => {
 		getBoard();
@@ -46,7 +55,7 @@ function Board() {
 		// Handle card drag
 		if (type === "card") {
 			// This step is needed as the indexes are stored as numbers 0,1,2 etc. instead of id's with DND library
-			const columns = Array.from(board.columns);
+			const columns = Array.from(board.columns);			
 			const startColIndex = columns[Number(source.droppableId)];
 			const finishColIndex = columns[Number(destination.droppableId)];
 
@@ -106,7 +115,54 @@ function Board() {
 		}
 	};
 
-	return (
+	const dummyArray = [
+		[
+			"todo",
+			{
+				id: "todo",
+				todos: [],
+			},
+		],
+		[
+			"inprogress",
+			{
+				id: "inprogress",
+				todos: [],
+			},
+		],
+		[
+			"done",
+			{
+				id: "done",
+				todos: [],
+			},
+		],
+	];
+	
+	return loading ? (
+		<DragDropContext onDragEnd={handleOnDragEnd}>
+			<Droppable droppableId="board" direction="horizontal" type="column">
+				{(provided) => (
+					<div
+						dir="rtl"
+						className="grid grid-cols-1 px-5 md:px-0 md:grid-cols-3 gap-5 max-w-7xl mx-auto"
+						{...provided.droppableProps}
+						ref={provided.innerRef}
+					>
+						{Array.from(dummyArray).map(([id, column], index) => (
+							<Column
+								key={id}
+								id={id}
+								todos={column.todos}
+								index={index}
+								loading={true}
+							/>
+						))}
+					</div>
+				)}
+			</Droppable>
+		</DragDropContext>
+	) : (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
 			<Droppable droppableId="board" direction="horizontal" type="column">
 				{(provided) => (

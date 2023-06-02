@@ -1,7 +1,5 @@
 import { getTodosGroupedByColumn } from "@/lib/getTodosGroupedByColumn";
 import { create } from "zustand";
-import { Client } from "pg";
-import TodoCard from "@/components/TodoCard";
 
 interface BoardState {
 	board: Board;

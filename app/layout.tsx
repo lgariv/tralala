@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
 	return (
 		<ClerkProvider>
-			<html lang="en">
+			<html lang="he">
 				<head>
 					<link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
 					<link rel="shortcut icon" href="/favicon.ico" />
