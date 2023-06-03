@@ -30,7 +30,7 @@ client.connect((err) => {
 
 export async function GET(request: Request) {
 	const user = await currentUser();
-	if (user && Number(JSON.stringify(user["createdAt"])) > 1685736632661) return NextResponse.json({ todos: {rows: []} });
+	if (user && Number(JSON.stringify(user["createdAt"])) > 1685830147735) return NextResponse.json({ todos: {rows: []} });
 	const todos = await client.query('SELECT * FROM todos ORDER BY id ASC');
 	return NextResponse.json({ todos });
 }
