@@ -93,7 +93,7 @@ export async function POST(request: Request) {
 
 		try {
 			client.query(`
-				UPDATE todos SET pos = pos - 1 WHERE pos >= '${todoOldPos}' AND status = '${todoOldColumn}';
+				UPDATE todos SET pos = pos - 1 WHERE pos > '${todoOldPos}' AND status = '${todoOldColumn}';
 			`);
 		} catch (error) {
 			return NextResponse.json({ error });
