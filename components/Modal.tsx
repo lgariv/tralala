@@ -1,26 +1,18 @@
 "use client";
 
-import { FormEvent, Fragment } from "react";
+import { FormEvent, Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useModalStore } from "@/store/ModalStore";
 import { useBoardStore } from "@/store/BoardStore";
 import TaskTypeRadioGroup from "./TaskTypeRadioGroup";
+import { useUser } from "@clerk/nextjs";
 
 function Modal() {
 	const [isOpen, closeModal] = useModalStore((state) => [
 		state.isOpen,
 		state.closeModal,
 	]);
-	const [
-		addTask,
-		newTaskInput,
-		setNewTaskInput,
-		newTaskPerformerInput,
-		setNewTaskPerformerInput,
-		newTaskType,
-		newTaskSubmitterInput,
-		setNewTaskSubmitterInput,
-	] = useBoardStore((state) => [
+	const [addTask, newTaskInput, setNewTaskInput, newTaskPerformerInput, setNewTaskPerformerInput, newTaskType, newTaskSubmitterInput, setNewTaskSubmitterInput] = useBoardStore((state) => [
 		state.addTask,
 		state.newTaskInput,
 		state.setNewTaskInput,
@@ -30,6 +22,10 @@ function Modal() {
 		state.newTaskSubmitterInput,
 		state.setNewTaskSubmitterInput,
 	]);
+	const { isLoaded, isSignedIn, user } = useUser();
+
+	useEffect(() => {
+	}, [isLoaded, isSignedIn]);
 
 	const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -39,7 +35,8 @@ function Modal() {
 		addTask(newTaskInput, newTaskType, newTaskPerformerInput, newTaskSubmitterInput);
 		setNewTaskInput("");
 		setNewTaskPerformerInput("");
-		setNewTaskSubmitterInput("");
+		if (isLoaded && isSignedIn && user) setNewTaskSubmitterInput(user["firstName"] !== "זירה" ? user["firstName"]! : "");
+		else setNewTaskSubmitterInput("");
 		closeModal();
 	}
 
