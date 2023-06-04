@@ -27,13 +27,7 @@ function Column({ id, todos, index, loading }: Props) {
 	const [openModal] = useModalStore((state) => [state.openModal]);
 
 	return (
-		// <Draggable draggableId={id} index={index}>
-		// 	{(provided) => (
-		<div
-		// {...provided.draggableProps}
-		// {...provided.dragHandleProps}
-		// ref={provided.innerRef}
-		>
+		<div>
 			<div className="p-2 rounded-2xl shadow-sm bg-white/50">
 				<h2 className="flex justify-between font-bold text-xl p-2">
 					{idToColumnText[id]}
@@ -130,8 +124,6 @@ function Column({ id, todos, index, loading }: Props) {
 				</Droppable>
 			</div>
 		</div>
-		// 	)}
-		// </Draggable>
 	);
 }
 
