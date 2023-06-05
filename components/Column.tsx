@@ -54,7 +54,7 @@ function Column({ id, todos, index, loading }: Props) {
 						onMouseEnter={handleMouseEnter}
 						onMouseLeave={handleMouseLeave}
 					>
-						{isHovered ? (
+						{isHovered && !loading ? (
 							<button
 								className="text-red-500"
 								onClick={() => todos.forEach((todo) => deleteTask(todo))}
