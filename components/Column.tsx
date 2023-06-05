@@ -59,7 +59,7 @@ function Column({ id, todos, index, loading }: Props) {
 								className="text-red-500"
 								onClick={() => todos.forEach((todo) => deleteTask(todo))}
 							>
-								<TrashIcon className="object-scale-down h-5 w-5" />
+								<TrashIcon className="object-scale-down h-5 w-5 -m-1" />
 							</button>
 						) : loading ? (
 							<ArrowPathIcon className="object-scale-down h-5 w-5 animate-spin" />
