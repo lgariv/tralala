@@ -1,8 +1,13 @@
-import { PlusCircleIcon, ArrowPathIcon } from "@heroicons/react/24/solid";
+import {
+	PlusCircleIcon,
+	ArrowPathIcon,
+	TrashIcon,
+} from "@heroicons/react/24/solid";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
 import { useBoardStore } from "@/store/BoardStore";
 import { useModalStore } from "@/store/ModalStore";
+import { useState } from "react";
 
 type Props = {
 	id: TypedColumn;
@@ -20,19 +25,43 @@ const idToColumnText: {
 };
 
 function Column({ id, todos, index, loading }: Props) {
-	const [searchString, setNewTaskType] = useBoardStore((state) => [
+	const [searchString, setNewTaskType, deleteTask] = useBoardStore((state) => [
 		state.searchString,
 		state.setNewTaskType,
+		state.deleteTask
 	]);
+
 	const [openModal] = useModalStore((state) => [state.openModal]);
+	const [isHovered, setIsHovered] = useState(false);
+
+	const handleMouseEnter = () => {
+		setIsHovered(true);
+	};
+
+	const handleMouseLeave = () => {
+		setIsHovered(false);
+	};
 
 	return (
 		<div>
 			<div className="p-2 rounded-2xl shadow-sm bg-white/50">
 				<h2 className="flex justify-between font-bold text-xl p-2">
 					{idToColumnText[id]}
-					<span className="text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal">
-						{loading ? (
+					<span
+						className={`text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal ${
+							isHovered ? "scale-110" : "scale-100"
+						} transition-all duration-300`}
+						onMouseEnter={handleMouseEnter}
+						onMouseLeave={handleMouseLeave}
+					>
+						{isHovered ? (
+							<button
+								className="text-red-500"
+								onClick={() => todos.forEach((todo) => deleteTask(todo))}
+							>
+								<TrashIcon className="object-scale-down h-5 w-5" />
+							</button>
+						) : loading ? (
 							<ArrowPathIcon className="object-scale-down h-5 w-5 animate-spin" />
 						) : !searchString ? (
 							todos.length
