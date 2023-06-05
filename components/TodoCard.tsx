@@ -2,6 +2,7 @@
 
 import { useBoardStore } from "@/store/BoardStore";
 import { TrashIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 import {
 	DraggableProvidedDragHandleProps,
 	DraggableProvidedDraggableProps,
@@ -25,6 +26,15 @@ function TodoCard({
 	dragHandleProps,
 }: Props) {
 	const [deleteTask] = useBoardStore((state) => [state.deleteTask]);
+	const [isHovered, setIsHovered] = useState(false);
+
+	const handleMouseEnter = () => {
+		setIsHovered(true);
+	};
+
+	const handleMouseLeave = () => {
+		setIsHovered(false);
+	};
 
 	return (
 		<div
@@ -36,13 +46,17 @@ function TodoCard({
 			<div className="flex justify-between items-center px-4 py-2">
 				<div>
 					<p>{todo.title}</p>
-					<p className="text-gray-400 text-xs">מאת: {todo.sender} • מבצע: {todo.name}</p>
+					<p className="text-gray-400 text-xs">
+						מאת: {todo.sender} • מבצע: {todo.name}
+					</p>
 				</div>
 				<button
-					className="text-gray-500 hover:text-red-600"
+					className={`text-gray-500 hover:text-red-600 transition-all duration-300`}
 					onClick={() => deleteTask(todo)}
+					onMouseEnter={handleMouseEnter}
+					onMouseLeave={handleMouseLeave}
 				>
-					<TrashIcon className="mr-4 h-6 w-6" />
+					<TrashIcon className="object-scale-down mr-4 h-6 w-6" />
 				</button>
 			</div>
 

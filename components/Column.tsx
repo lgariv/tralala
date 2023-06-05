@@ -49,15 +49,17 @@ function Column({ id, todos, index, loading }: Props) {
 					{idToColumnText[id]}
 					<span
 						className={`text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal ${
-							isHovered ? "scale-110" : "scale-100"
-						} transition-all duration-300`}
+							isHovered && id === "done" ? "scale-110" : "scale-100"
+						} transition-all duration-00`}
 						onMouseEnter={handleMouseEnter}
 						onMouseLeave={handleMouseLeave}
 					>
-						{isHovered && !loading ? (
+						{isHovered && !loading && id === "done" ? (
 							<button
-								className="text-red-500"
-								onClick={() => todos.forEach((todo) => deleteTask(todo))}
+								className="text-red-600"
+								onClick={() =>
+									todos.forEach((todo) => deleteTask(todo))
+								}
 							>
 								<TrashIcon className="object-scale-down h-5 w-5 -m-1" />
 							</button>
