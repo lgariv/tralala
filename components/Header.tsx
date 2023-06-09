@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ArrowPathIcon, MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useBoardStore } from "@/store/BoardStore";
 import { useEffect, useState } from "react";
-import { UserButton } from "@clerk/nextjs";
 
 function Header() {
 	const [board, searchString, setSearchString] = useBoardStore((state) => [
@@ -60,7 +59,7 @@ function Header() {
 					</form>
 
 					{/* Avatar  */}
-					<UserButton afterSignOutUrl="/" />
+					{/* <UserButton afterSignOutUrl="/" /> */}
 				</div>
 			</div>
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Client } from "pg";
-import { currentUser } from "@clerk/nextjs";
+// import { currentUser } from "@clerk/nextjs";
 // import { useBoardStore } from "@/store/BoardStore";
 
 const client = new Client({
@@ -29,8 +29,8 @@ client.connect((err) => {
 // });
 
 export async function GET(request: Request) {
-	const user = await currentUser();
-	if (user && Number(JSON.stringify(user["createdAt"])) > 1685921561999) return NextResponse.json({ todos: {rows: []} });
+	// const user = await currentUser();
+	// if (user && Number(JSON.stringify(user["createdAt"])) > 1685921561999) return NextResponse.json({ todos: {rows: []} });
 	const todos = await client.query('SELECT * FROM todos ORDER BY id ASC');
 	return NextResponse.json({ todos });
 }

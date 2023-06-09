@@ -3,7 +3,7 @@
 import { useBoardStore } from "@/store/BoardStore";
 import { useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs";
 import Column from "./Column";
 
 function Board() {
@@ -16,13 +16,13 @@ function Board() {
 			state.setNewTaskSubmitterInput
 		]
 	);
-	const { isLoaded, isSignedIn, user } = useUser();
+	// const { isLoaded, isSignedIn, user } = useUser();
 	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (user) setNewTaskSubmitterInput(user["firstName"] !== "זירה" ? user["firstName"]! : "");
+		// if (user) setNewTaskSubmitterInput(user["firstName"] !== "זירה" ? user["firstName"]! : "");
 		setLoading(board.columns.size === 0);
-	}, [isLoaded, isSignedIn, board]);
+	}, [/*isLoaded, isSignedIn,*/ board]);
 
 	useEffect(() => {
 		getBoard();
