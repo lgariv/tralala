@@ -35,7 +35,7 @@ function Modal() {
 		addTask(newTaskInput, newTaskType, newTaskPerformerInput, newTaskSubmitterInput);
 		setNewTaskInput("");
 		setNewTaskPerformerInput("");
-		if (!isLoading && user) setNewTaskSubmitterInput(user.name !== "זירה" ? user.name! : "");
+		if (!isLoading && user) setNewTaskSubmitterInput(user.nickname!);
 		else setNewTaskSubmitterInput("");
 		closeModal();
 	}

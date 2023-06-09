@@ -21,7 +21,7 @@ function Board() {
 
 	useEffect(() => {
 		if (!isLoading && user)
-			setNewTaskSubmitterInput(user.name!);
+			setNewTaskSubmitterInput(user.nickname!);
 		setLoading(board.columns.size === 0);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isLoading, user, board]);
