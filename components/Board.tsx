@@ -20,8 +20,10 @@ function Board() {
 	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (!isLoading && user) setNewTaskSubmitterInput(user.name !== "זירה" ? user.name! : "");
+		if (!isLoading && user)
+			setNewTaskSubmitterInput(user.name!);
 		setLoading(board.columns.size === 0);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isLoading, user, board]);
 
 	useEffect(() => {
@@ -32,6 +34,7 @@ function Board() {
 		}, 10000);
 
 		return () => clearInterval(intervalId);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleOnDragEnd = (result: DropResult) => {

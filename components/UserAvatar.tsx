@@ -1,6 +1,8 @@
+"use client"
+
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Popover, Transition } from "@headlessui/react";
-import { ArrowRightOnRectangleIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
+import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
 import { Fragment } from "react";
 
 const solutions = [
@@ -16,15 +18,15 @@ function UserAvatar() {
 
 	return (
 		<>
-			{user && (
+			{user && user.picture && (
 				<>
 					<Popover className="relative border-none border-transparent ring-0 focus:ring-transparent focus:border-transparent focus:ring-0">
 						{({ open }) => (
 							<>
-								<Popover.Button>
+                                <Popover.Button>
 									<img
 										className="rounded-full img-fluid w-14 h-14 object-contain border-transparent focus:border-transparent focus:ring-0"
-										src={user.picture!}
+										src={user!.picture! || "/tralala.png"}
 										alt="Profile"
 									/>
 								</Popover.Button>
