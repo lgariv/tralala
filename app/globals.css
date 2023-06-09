@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.translate-image {
+  transform: translateX(calc(-100% + 3.5rem));
+}

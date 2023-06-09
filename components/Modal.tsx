@@ -5,7 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useModalStore } from "@/store/ModalStore";
 import { useBoardStore } from "@/store/BoardStore";
 import TaskTypeRadioGroup from "./TaskTypeRadioGroup";
-// import { useUser } from "@clerk/nextjs";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 function Modal() {
 	const [isOpen, closeModal] = useModalStore((state) => [
@@ -22,10 +22,10 @@ function Modal() {
 		state.newTaskSubmitterInput,
 		state.setNewTaskSubmitterInput,
 	]);
-	// const { isLoaded, isSignedIn, user } = useUser();
+	const { user, error, isLoading } = useUser();
 
 	// useEffect(() => {
-	// }, [isLoaded, isSignedIn]);
+	// }, [isLoading, user]);
 
 	const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -35,8 +35,8 @@ function Modal() {
 		addTask(newTaskInput, newTaskType, newTaskPerformerInput, newTaskSubmitterInput);
 		setNewTaskInput("");
 		setNewTaskPerformerInput("");
-		/* if (isLoaded && isSignedIn && user) setNewTaskSubmitterInput(user["firstName"] !== "זירה" ? user["firstName"]! : "");
-		else*/ setNewTaskSubmitterInput("");
+		if (!isLoading && user) setNewTaskSubmitterInput(user.name !== "זירה" ? user.name! : "");
+		else setNewTaskSubmitterInput("");
 		closeModal();
 	}
 

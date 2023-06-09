@@ -1,4 +1,5 @@
 import Modal from "@/components/Modal";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "./globals.css";
 
 export const metadata = {
@@ -12,20 +13,22 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="he">
-			<head>
-				<link
-					rel="apple-touch-icon"
-					sizes="180x180"
-					href="/favicon.ico"
-				/>
-				<link rel="shortcut icon" href="/favicon.ico" />
-				<link rel="manifest" href="/site.webmanifest" />
-			</head>
-			<body className="bg-[#F5F6F8]">
-				{children}
-				<Modal />
-			</body>
-		</html>
+		<UserProvider>
+			<html lang="he">
+				<head>
+					<link
+						rel="apple-touch-icon"
+						sizes="180x180"
+						href="/favicon.ico"
+					/>
+					<link rel="shortcut icon" href="/favicon.ico" />
+					<link rel="manifest" href="/site.webmanifest" />
+				</head>
+				<body className="bg-[#F5F6F8]">
+					{children}
+					<Modal />
+				</body>
+			</html>
+		</UserProvider>
 	);
 }

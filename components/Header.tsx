@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowPathIcon, MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useBoardStore } from "@/store/BoardStore";
 import { useEffect, useState } from "react";
+import UserAvatar from "./UserAvatar";
 
 function Header() {
 	const [board, searchString, setSearchString] = useBoardStore((state) => [
@@ -60,6 +61,7 @@ function Header() {
 
 					{/* Avatar  */}
 					{/* <UserButton afterSignOutUrl="/" /> */}
+					<UserAvatar />
 				</div>
 			</div>
 
