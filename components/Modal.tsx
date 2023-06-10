@@ -111,7 +111,11 @@ function Modal() {
 									/>
 								</div>
 
-								{isEditing ? <hr className="border-gray-300 dark:border-gray-600 m-4" /> : <TaskTypeRadioGroup />}
+								{isEditing ? (
+									<hr className="border-gray-300 dark:border-gray-600 m-4" />
+								) : (
+									<TaskTypeRadioGroup />
+								)}
 
 								<div>
 									<input
@@ -135,7 +139,7 @@ function Modal() {
 											!newTaskPerformerInput ||
 											!newTaskSubmitterInput
 										}
-										className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 dark:bg-teal-600 px-4 py-2 text-sm font-medium text-blue-900 dark:text-teal-100 hover:bg-blue-200 dark:hover:bg-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300 dark:disabled:bg-gray-800 dark:disabled:text-gray-600 disabled:cursor-not-allowed "
+										className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 dark:bg-sky-800 px-4 py-2 text-sm font-medium text-blue-800 dark:text-blue-100 hover:bg-blue-200 dark:hover:bg-sky-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:focus-visible:ring-sky-700 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300 dark:disabled:bg-gray-800 dark:disabled:text-gray-600 disabled:cursor-not-allowed "
 									>
 										{isEditing ? "סיום" : "הוסף משימה"}
 									</button>
