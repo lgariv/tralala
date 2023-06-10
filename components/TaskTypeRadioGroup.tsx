@@ -53,7 +53,7 @@ const TaskTypeRadioGroup: React.FC = () => {
 									${
 										checked
 											? `${type.color} bg-opacity-75 text-white`
-											: "bg-white"
+											: "bg-white dark:bg-gray-800"
 									}
 									relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none
 									`}
@@ -68,7 +68,7 @@ const TaskTypeRadioGroup: React.FC = () => {
 														className={`font-medium ${
 															checked
 																? "text-white"
-																: "text-gray-900"
+																: "text-gray-900 dark:text-gray-100"
 														} `}
 													>
 														{type.name}
@@ -78,7 +78,7 @@ const TaskTypeRadioGroup: React.FC = () => {
 														className={`inline ${
 															checked
 																? "text-white"
-																: "text-gray-500"
+																: "text-gray-500 dark:text-gray-400"
 														} `}
 													>
 														<span>

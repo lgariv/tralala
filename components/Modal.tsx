@@ -69,10 +69,10 @@ function Modal() {
 							leaveFrom="opacity-100 scale-100"
 							leaveTo="opacity-0 scale-95"
 						>
-							<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+							<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-black p-6 text-left align-middle shadow-xl transition-all">
 								<Dialog.Title
 									as="h3"
-									className="text-lg text-start font-medium leading-6 text-gray-900 pb-2"
+									className="text-lg text-start font-medium leading-6 text-gray-900 dark:text-white pb-2"
 								>
 									הוסף משימה חדשה
 								</Dialog.Title>
@@ -85,7 +85,7 @@ function Modal() {
 											setNewTaskInput(e.target.value)
 										}
 										placeholder="הכנס משימה כאן..."
-										className="w-full border border-gray-300 rounded-md outline-none p-5"
+										className="w-full border border-gray-300 dark:border-gray-600 rounded-md outline-none p-5 dark:bg-gray-800 dark:text-white"
 									/>
 								</div>
 
@@ -99,7 +99,7 @@ function Modal() {
 											)
 										}
 										placeholder="מי מבצע את המשימה?"
-										className="w-full border border-gray-300 rounded-md outline-none p-5"
+										className="w-full border border-gray-300 dark:border-gray-600 rounded-md outline-none p-5 dark:bg-gray-800 dark:text-white"
 									/>
 								</div>
 
@@ -115,7 +115,7 @@ function Modal() {
 											)
 										}
 										placeholder="המשימה ניתנה על ידי..."
-										className="w-full border border-gray-300 rounded-md outline-none p-5"
+										className="w-full border border-gray-300 dark:border-gray-600 rounded-md outline-none p-5 dark:bg-gray-800 dark:text-white"
 									/>
 								</div>
 
@@ -127,7 +127,7 @@ function Modal() {
 											!newTaskPerformerInput ||
 											!newTaskSubmitterInput
 										}
-										className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed "
+										className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 dark:bg-blue-600 px-4 py-2 text-sm font-medium text-blue-900 dark:text-blue-100 hover:bg-blue-200 dark:hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300 dark:disabled:bg-gray-800 dark:disabled:text-gray-600 disabled:cursor-not-allowed "
 									>
 										הוסף משימה
 									</button>

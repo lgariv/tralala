@@ -38,7 +38,7 @@ function UserAvatar() {
 							>
 								<Popover.Panel className="absolute z-10 mt-3 min-w-max translate-image transform lg:max-w-3xl">
 									<div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-										<div className="relative gap-8 bg-white p-5 lg:grid-cols-2">
+										<div className="relative gap-8 bg-white dark:bg-gray-900 p-5 lg:grid-cols-2">
 											{solutions.map((item) => (
 												<a
 													key={item.name}
@@ -46,11 +46,11 @@ function UserAvatar() {
 													className="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
 												>
 													<div className="mr-4">
-														<p className="text-sm font-medium text-gray-900">
+														<p className="text-sm font-medium text-gray-900 dark:text-white">
 															{item.name}
 														</p>
 													</div>
-													<div className="flex h-6 w-6 shrink-0 items-center justify-center text-black md:h-5 md:w-5">
+													<div className="flex h-6 w-6 shrink-0 items-center justify-center text-black dark:text-white md:h-5 md:w-5">
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
 															viewBox="0 0 24 24"

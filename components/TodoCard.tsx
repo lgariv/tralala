@@ -38,20 +38,20 @@ function TodoCard({
 
 	return (
 		<div
-			className="bg-white rounded-md space-y-2 drop-shadow-md select-none"
+			className="bg-white dark:bg-gray-800 rounded-md space-y-2 drop-shadow-md select-none"
 			{...draggableProps}
 			{...dragHandleProps}
 			ref={innerRef}
 		>
 			<div className="flex justify-between items-center px-4 py-2">
 				<div>
-					<p>{todo.title}</p>
+					<p className="dark:text-white">{todo.title}</p>
 					<p className="text-gray-400 text-xs">
 						מאת: {todo.sender} • מבצע: {todo.name}
 					</p>
 				</div>
 				<button
-					className={`text-gray-500 hover:text-red-600 transition-all duration-300`}
+					className={`text-gray-500 dark:text-gray-200 hover:text-red-600 transition-all duration-300`}
 					onClick={() => deleteTask(todo)}
 					onMouseEnter={handleMouseEnter}
 					onMouseLeave={handleMouseLeave}

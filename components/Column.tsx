@@ -44,11 +44,11 @@ function Column({ id, todos, index, loading }: Props) {
 
 	return (
 		<div>
-			<div className="p-2 rounded-2xl shadow-sm bg-white/50">
-				<h2 className="flex justify-between font-bold text-xl p-2">
+			<div className="p-2 rounded-2xl shadow-sm bg-white/50 dark:bg-gray-500/30">
+				<h2 className="flex justify-between font-bold text-xl p-2 dark:text-white">
 					{idToColumnText[id]}
 					<span
-						className={`text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal ${
+						className={`text-gray-500 bg-gray-200 dark:text-gray-200 dark:bg-gray-800 rounded-full px-2 py-1 text-sm font-normal ${
 							isHovered && id === "done" ? "scale-110" : "scale-100"
 						} transition-all duration-00`}
 						onMouseEnter={handleMouseEnter}

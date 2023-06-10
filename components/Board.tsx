@@ -43,18 +43,6 @@ function Board() {
 		// Check if user dragged card outside of board
 		if (!destination) return;
 
-		// Handle column drag
-		// if (type === "column") {
-		// 	const entries = Array.from(board.columns.entries());
-		// 	const [removed] = entries.splice(source.index, 1);
-		// 	entries.splice(destination.index, 0, removed);
-		// 	const rearrangedColumns = new Map(entries);
-		// 	setBoardState({
-		// 		...board,
-		// 		columns: rearrangedColumns,
-		// 	});
-		// }
-
 		// Handle card drag
 		if (type === "card") {
 			// This step is needed as the indexes are stored as numbers 0,1,2 etc. instead of id's with DND library

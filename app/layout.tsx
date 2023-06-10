@@ -24,7 +24,7 @@ export default function RootLayout({
 					<link rel="shortcut icon" href="/favicon.ico" />
 					<link rel="manifest" href="/site.webmanifest" />
 				</head>
-				<body className="bg-[#F5F6F8]">
+				<body className="bg-[#F5F6F8] dark:bg-[#151516]">
 					{children}
 					<Modal />
 				</body>
