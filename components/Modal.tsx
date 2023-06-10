@@ -24,9 +24,6 @@ function Modal() {
 	]);
 	const { user, error, isLoading } = useUser();
 
-	// useEffect(() => {
-	// }, [isLoading, user]);
-
 	const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!newTaskInput || !newTaskPerformerInput) return;
