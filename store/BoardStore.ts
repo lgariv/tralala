@@ -1,11 +1,24 @@
 import { getTodosGroupedByColumn } from "@/lib/getTodosGroupedByColumn";
 import { create } from "zustand";
 
+type Dict = {
+	requestType: string;
+	id: string;
+	title?: string;
+	oldStatus?: TypedColumn;
+	status?: TypedColumn;
+	oldPosition?: number;
+	position?: number;
+	taskTitle?: string;
+	taskPerformer?: string;
+	taskSubmitter?: string;
+};
+
 interface BoardState {
 	board: Board;
 	getBoard: () => void;
 	setBoardState: (board: Board) => void;
-	updateTodoInDB: (todo: Todo, oldStatus: TypedColumn, status: TypedColumn, oldPosition: number, position: number) => void;
+	updateTodoInDB: (todo: Todo, oldStatus: TypedColumn | null | undefined, status: TypedColumn | null | undefined, oldPosition: number | null | undefined, position: number | null | undefined, taskTitle: string | null | undefined, taskPerformer: string | null | undefined, taskSubmitter: string | null | undefined) => void;
 	searchString: string;
 	setSearchString: (searchString: string) => void;
 	newTaskInput: string;
@@ -37,16 +50,21 @@ export const useBoardStore = create<BoardState>((set) => ({
 
 	setBoardState: (board) => set({ board }),
 
-	updateTodoInDB: async (todo, oldStatus, status, oldPosition, position) => {
-		const raw = JSON.stringify({
+	updateTodoInDB: async (todo, oldStatus?, status?, oldPosition?, position?, taskTitle?, taskPerformer?, taskSubmitter?) => {
+		var dict: Dict = {
 			requestType: "updatePosition",
 			id: todo.id,
-			title: todo.title,
-			oldStatus: oldStatus,
-			status: status,
-			oldPosition: oldPosition,
-			position: position,
-		});
+		};
+
+		dict["title"] = taskTitle != null ? taskTitle : todo.title;
+		if (oldStatus != null) dict["oldStatus"] = oldStatus;
+		if (status != null) dict["status"] = status;
+		if (oldPosition != null) dict["oldPosition"] = oldPosition;
+		if (position != null) dict["position"] = position;
+		if (taskPerformer != null) dict["taskPerformer"] = taskPerformer;
+		if (taskSubmitter != null) dict["taskSubmitter"] = taskSubmitter;
+
+		const raw = JSON.stringify(dict);
 
 		await fetch("/api/vercelDBConnection", {
 			body: raw,
@@ -55,6 +73,9 @@ export const useBoardStore = create<BoardState>((set) => ({
 			},
 			method: "POST",
 		});
+
+		const board = await getTodosGroupedByColumn();
+		set({ board });
 	},
 
 	searchString: "",

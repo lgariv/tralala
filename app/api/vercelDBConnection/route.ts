@@ -40,29 +40,40 @@ export async function POST(request: Request) {
 	if (body["requestType"].includes("updatePosition")) {
 		const todoID: string = body["id"];
 		const todoTitle: string = body["title"];
-		const todoOldColumn: string = body["oldStatus"];
-		const todoNewColumn: string = body["status"];
-		const todoOldPos: number = body["oldPosition"];
-		const todoNewPos: number = body["position"];
+		const todoOldColumn: string | null | undefined = body["oldStatus"];
+		const todoNewColumn: string | null | undefined = body["status"];
+		const todoOldPos: number | null | undefined = body["oldPosition"];
+		const todoNewPos: number | null | undefined = body["position"];
+		const todoNewPerformer: string | null | undefined = body["taskPerformer"];
+		const todoNewSubmitter: string | null | undefined = body["taskSubmitter"];
 
-		try {
-			await client.query(`
-				UPDATE todos SET pos = pos - 1 WHERE pos > '${todoOldPos}' AND status = '${todoOldColumn}';
-			`);
-		} catch (error) {
-			return NextResponse.json({ error });
+		if (todoOldPos!=null && todoOldColumn!=null && todoNewPos!=null && todoNewColumn!=null) {
+			try {
+				console.log("old happened");
+				await client.query(`
+					UPDATE todos SET pos = pos - 1 WHERE pos > '${todoOldPos}' AND status = '${todoOldColumn}';
+				`);
+			} catch (error) {
+				return NextResponse.json({ error });
+			}
+			try {
+				console.log("new happened");
+				await client.query(`
+					UPDATE todos SET pos = pos + 1 WHERE pos >= '${todoNewPos}' AND status = '${todoNewColumn}';
+				`);
+			} catch (error) {
+				return NextResponse.json({ error });
+			}
 		}
 		try {
-			await client.query(`
-				UPDATE todos SET pos = pos + 1 WHERE pos >= '${todoNewPos}' AND status = '${todoNewColumn}';
-			`);
-		} catch (error) {
-			return NextResponse.json({ error });
-		}
-		try {
-			await client.query(`
-				UPDATE todos SET title = '${todoTitle}', status = '${todoNewColumn}', pos = '${todoNewPos}' WHERE id = '${todoID}';
-			`);
+			var query = `UPDATE todos SET title = '${todoTitle}'`;
+			if (todoNewColumn!=null) query += `, status = '${todoNewColumn}'`;
+			if (todoNewPos!=null) query += `, pos = '${todoNewPos}'`;
+			if (todoNewPerformer!=null) query += `, name = '${todoNewPerformer}'`;
+			if (todoNewSubmitter!=null) query += `, sender = '${todoNewSubmitter}'`;
+			query += ` WHERE id = '${todoID}';`
+			console.log(query);
+			await client.query(query);
 		} catch (error) {
 			return NextResponse.json({ error });
 		}

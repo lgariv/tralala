@@ -7,12 +7,13 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import Column from "./Column";
 
 function Board() {
-	const [board, getBoard, setBoardState, updateTodoInDB, setNewTaskSubmitterInput] = useBoardStore(
+	const [board, getBoard, setBoardState, updateTodoInDB, newTaskSubmitterInput, setNewTaskSubmitterInput] = useBoardStore(
 		(state) => [
 			state.board,
 			state.getBoard,
 			state.setBoardState,
 			state.updateTodoInDB,
+			state.newTaskSubmitterInput,
 			state.setNewTaskSubmitterInput
 		]
 	);
@@ -20,7 +21,7 @@ function Board() {
 	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (!isLoading && user)
+		if (!isLoading && user && newTaskSubmitterInput === "")
 			setNewTaskSubmitterInput(user.nickname!);
 		setLoading(board.columns.size === 0);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,7 +79,7 @@ function Board() {
 				newColumns.set(startCol.id, newCol);
 
 				// Update in DB
-				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index);
+				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index, null, null, null);
 
 				setBoardState({ ...board, columns: newColumns });
 			} else {
@@ -99,7 +100,7 @@ function Board() {
 				});
 
 				// Update in DB
-				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index);
+				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index, null, null, null);
 
 				setBoardState({ ...board, columns: newColumns });
 			}

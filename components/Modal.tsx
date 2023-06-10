@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, Fragment, useEffect } from "react";
+import { FormEvent, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useModalStore } from "@/store/ModalStore";
 import { useBoardStore } from "@/store/BoardStore";
@@ -8,12 +8,15 @@ import TaskTypeRadioGroup from "./TaskTypeRadioGroup";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 function Modal() {
-	const [isOpen, closeModal] = useModalStore((state) => [
+	const [isOpen, closeModal, isEditing, task] = useModalStore((state) => [
 		state.isOpen,
 		state.closeModal,
+		state.isEditing,
+		state.task,
 	]);
-	const [addTask, newTaskInput, setNewTaskInput, newTaskPerformerInput, setNewTaskPerformerInput, newTaskType, newTaskSubmitterInput, setNewTaskSubmitterInput] = useBoardStore((state) => [
+	const [addTask, updateTodoInDB, newTaskInput, setNewTaskInput, newTaskPerformerInput, setNewTaskPerformerInput, newTaskType, newTaskSubmitterInput, setNewTaskSubmitterInput, getBoard] = useBoardStore((state) => [
 		state.addTask,
+		state.updateTodoInDB,
 		state.newTaskInput,
 		state.setNewTaskInput,
 		state.newTaskPerformerInput,
@@ -21,6 +24,7 @@ function Modal() {
 		state.newTaskType,
 		state.newTaskSubmitterInput,
 		state.setNewTaskSubmitterInput,
+		state.getBoard
 	]);
 	const { user, error, isLoading } = useUser();
 
@@ -29,7 +33,9 @@ function Modal() {
 		if (!newTaskInput || !newTaskPerformerInput) return;
 
 		// add task
-		addTask(newTaskInput, newTaskType, newTaskPerformerInput, newTaskSubmitterInput);
+		if (!isEditing) addTask(newTaskInput, newTaskType, newTaskPerformerInput, newTaskSubmitterInput);
+		// update task
+		else updateTodoInDB(task!, null, null, null, null, newTaskInput, newTaskPerformerInput, newTaskSubmitterInput);
 		setNewTaskInput("");
 		setNewTaskPerformerInput("");
 		if (!isLoading && user) setNewTaskSubmitterInput(user.nickname!);
@@ -74,7 +80,9 @@ function Modal() {
 									as="h3"
 									className="text-lg text-start font-medium leading-6 text-gray-900 dark:text-white pb-2"
 								>
-									הוסף משימה חדשה
+									{isEditing
+										? "ערוך משימה"
+										: "הוסף משימה חדשה"}
 								</Dialog.Title>
 
 								<div className="mt-2">
@@ -103,7 +111,7 @@ function Modal() {
 									/>
 								</div>
 
-								<TaskTypeRadioGroup />
+								{isEditing ? <hr className="border-gray-300 dark:border-gray-600 m-4" /> : <TaskTypeRadioGroup />}
 
 								<div>
 									<input
@@ -129,7 +137,7 @@ function Modal() {
 										}
 										className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 dark:bg-teal-600 px-4 py-2 text-sm font-medium text-blue-900 dark:text-teal-100 hover:bg-blue-200 dark:hover:bg-teal-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300 dark:disabled:bg-gray-800 dark:disabled:text-gray-600 disabled:cursor-not-allowed "
 									>
-										הוסף משימה
+										{isEditing ? "סיום" : "הוסף משימה"}
 									</button>
 								</div>
 							</Dialog.Panel>

@@ -8,6 +8,7 @@ import TodoCard from "./TodoCard";
 import { useBoardStore } from "@/store/BoardStore";
 import { useModalStore } from "@/store/ModalStore";
 import { useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 type Props = {
 	id: TypedColumn;
@@ -25,14 +26,22 @@ const idToColumnText: {
 };
 
 function Column({ id, todos, index, loading }: Props) {
-	const [searchString, setNewTaskType, deleteTask] = useBoardStore((state) => [
-		state.searchString,
-		state.setNewTaskType,
-		state.deleteTask
+	const [searchString, setNewTaskType, deleteTask, deleteTasksetNewTaskInput, setNewTaskPerformerInput, setNewTaskSubmitterInput] = useBoardStore(
+		(state) => [
+			state.searchString,
+			state.setNewTaskType,
+			state.deleteTask,
+			state.setNewTaskInput,
+			state.setNewTaskPerformerInput,
+			state.setNewTaskSubmitterInput
+		]
+	);
+	const [openModal, setEditing] = useModalStore((state) => [
+		state.openModal,
+		state.setEditing,
 	]);
-
-	const [openModal] = useModalStore((state) => [state.openModal]);
 	const [isHovered, setIsHovered] = useState(false);
+	const { user, error, isLoading } = useUser();
 
 	const handleMouseEnter = () => {
 		setIsHovered(true);
@@ -144,6 +153,11 @@ function Column({ id, todos, index, loading }: Props) {
 									<button
 										onClick={() => {
 											setNewTaskType(id);
+											deleteTasksetNewTaskInput("");
+											setNewTaskPerformerInput("");
+											if (!isLoading && user) setNewTaskSubmitterInput(user.nickname!);
+											else setNewTaskSubmitterInput("");
+											setEditing(false, null);
 											openModal();
 										}}
 										className="text-green-500 hover:text-green-600 transition-all duration-200"
