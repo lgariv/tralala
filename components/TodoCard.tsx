@@ -38,7 +38,7 @@ function TodoCard({
 
 	return (
 		<div
-			className="bg-white dark:bg-gray-800 rounded-md space-y-2 drop-shadow-md select-none"
+			className="bg-white dark:bg-gray-900 rounded-md space-y-2 drop-shadow-md select-none"
 			{...draggableProps}
 			{...dragHandleProps}
 			ref={innerRef}

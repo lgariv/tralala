@@ -52,14 +52,14 @@ function Header() {
 
 				<div className="flex items-center space-x-5 flex-1 justify-end w-full">
 					{/* Search Box */}
-					<form className="flex items-center px-5 bg-white dark:bg-gray-800 rounded-md p-2 shadow-mx flex-1 md:flex-initial">
+					<form className="flex items-center px-5 bg-white dark:bg-gray-900 rounded-md p-2 shadow-mx flex-1 md:flex-initial">
 						<MagnifyingGlassIcon className="h-6 w-6 text-gray-400 dark:text-gray-300" />
 						<input
 							dir="rtl"
 							type="text"
 							placeholder="חיפוש"
 							onChange={(e) => setSearchString(e.target.value)}
-							className="flex-1 outline-none p-2 dark:bg-gray-800 dark:text-gray-300"
+							className="flex-1 outline-none p-2 dark:bg-gray-900 dark:text-gray-300"
 						/>
 						<button></button>
 					</form>
