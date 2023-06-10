@@ -36,10 +36,13 @@ function Header() {
 	return (
 		<header className="pb-2 md:pb-5">
 			<div className="flex flex-col md:flex-row items-center p-5 bg-gray-500/20 dark:bg-white/10 rounded-b-2xl">
-				<div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-br from-pink-400 to-[#0055D1] rounded-md filter blur-3xl opacity-50 -z-50" />
+				<div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-br from-pink-400 dark:from-pink-600 to-[#0055D1] dark:to-teal-400 rounded-md filter blur-3xl opacity-70 dark:opacity-60 -z-50" />
 
 				<picture>
-					<source srcSet={darkImage.src} media="(prefers-color-scheme: dark)" />
+					<source
+						srcSet={darkImage.src}
+						media="(prefers-color-scheme: dark)"
+					/>
 					<Image
 						priority={true}
 						src={lightImage}
