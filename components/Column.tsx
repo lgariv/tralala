@@ -49,7 +49,9 @@ function Column({ id, todos, index, loading }: Props) {
 					{idToColumnText[id]}
 					<span
 						className={`text-gray-500 bg-gray-200 dark:text-gray-200 dark:bg-gray-800 rounded-full px-2 py-1 text-sm font-normal ${
-							isHovered && id === "done" ? "scale-110" : "scale-100"
+							isHovered && id === "done"
+								? "scale-110"
+								: "scale-100"
 						} transition-all duration-00`}
 						onMouseEnter={handleMouseEnter}
 						onMouseLeave={handleMouseLeave}
@@ -144,7 +146,7 @@ function Column({ id, todos, index, loading }: Props) {
 											setNewTaskType(id);
 											openModal();
 										}}
-										className="text-green-500 hover:text-green-600"
+										className="text-green-500 hover:text-green-600 transition-all duration-200"
 									>
 										<PlusCircleIcon className="h-10 w-10" />
 									</button>

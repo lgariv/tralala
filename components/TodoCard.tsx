@@ -51,7 +51,7 @@ function TodoCard({
 					</p>
 				</div>
 				<button
-					className={`text-gray-500 dark:text-gray-200 hover:text-red-600 transition-all duration-300`}
+					className={`text-gray-500 dark:text-gray-200 hover:text-red-600 transition-all duration-200`}
 					onClick={() => deleteTask(todo)}
 					onMouseEnter={handleMouseEnter}
 					onMouseLeave={handleMouseLeave}
