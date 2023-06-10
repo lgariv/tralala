@@ -49,7 +49,6 @@ export async function POST(request: Request) {
 
 		if (todoOldPos!=null && todoOldColumn!=null && todoNewPos!=null && todoNewColumn!=null) {
 			try {
-				console.log("old happened");
 				await client.query(`
 					UPDATE todos SET pos = pos - 1 WHERE pos > '${todoOldPos}' AND status = '${todoOldColumn}';
 				`);
@@ -57,7 +56,6 @@ export async function POST(request: Request) {
 				return NextResponse.json({ error });
 			}
 			try {
-				console.log("new happened");
 				await client.query(`
 					UPDATE todos SET pos = pos + 1 WHERE pos >= '${todoNewPos}' AND status = '${todoNewColumn}';
 				`);
@@ -72,7 +70,6 @@ export async function POST(request: Request) {
 			if (todoNewPerformer!=null) query += `, name = '${todoNewPerformer}'`;
 			if (todoNewSubmitter!=null) query += `, sender = '${todoNewSubmitter}'`;
 			query += ` WHERE id = '${todoID}';`
-			console.log(query);
 			await client.query(query);
 		} catch (error) {
 			return NextResponse.json({ error });
