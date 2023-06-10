@@ -2,7 +2,6 @@
 
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Popover, Transition } from "@headlessui/react";
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
 import { Fragment } from "react";
 
 const solutions = [
