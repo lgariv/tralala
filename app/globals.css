@@ -5,3 +5,9 @@
 .translate-image {
 	transform: translateX(calc(-100% + 3.5rem));
 }
+
+* :focus-visible,
+:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
