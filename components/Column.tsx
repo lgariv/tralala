@@ -53,7 +53,7 @@ function Column({ id, todos, index, loading }: Props) {
 
 	return (
 		<div>
-			<div className="p-2 rounded-2xl shadow-sm bg-white/50 dark:bg-gray-900/40">
+			<div className="p-2 rounded-2xl shadow-sm bg-white/50 dark:bg-gray-800/50">
 				<h2 className="flex justify-between font-bold text-xl p-2 dark:text-white">
 					{idToColumnText[id]}
 					<span
