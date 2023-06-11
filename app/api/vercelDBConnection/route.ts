@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { Client } from "pg";
-// import { currentUser } from "@clerk/nextjs";
-// import { useBoardStore } from "@/store/BoardStore";
 
 const client = new Client({
 	connectionString: process.env.POSTGRES_URL + "?sslmode=require",
@@ -18,19 +16,7 @@ client.connect((err) => {
 	}
 });
 
-// client.query("LISTEN table_changes");
-
-// const tableChanged = useBoardStore((state) => state.tableChanged);
-
-// client.on("notification", (msg) => {
-// 	console.log(msg.channel); // foo
-// 	console.log(msg.payload); // bar!
-// 	// tableChanged();
-// });
-
 export async function GET(request: Request) {
-	// const user = await currentUser();
-	// if (user && Number(JSON.stringify(user["createdAt"])) > 1685921561999) return NextResponse.json({ todos: {rows: []} });
 	const todos = await client.query('SELECT * FROM todos ORDER BY id ASC');
 	return NextResponse.json({ todos });
 }
