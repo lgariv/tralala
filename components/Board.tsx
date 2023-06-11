@@ -135,7 +135,7 @@ function Board() {
 						{Array.from(dummyArray.entries()).map(([id, column], index) => (
 							<Column
 								key={id}
-								id={column.id as TypedColumn}
+								id={column.id as string}
 								todos={column.todos}
 								index={index}
 								loading={true}

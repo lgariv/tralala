@@ -11,14 +11,14 @@ import { useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 type Props = {
-	id: TypedColumn;
+	id: string;
 	todos: Todo[];
 	index: number;
 	loading?: boolean;
 };
 
 const idToColumnText: {
-	[key in TypedColumn]: string;
+	[key in string]: string;
 } = {
 	todo: "משימות",
 	inprogress: "בביצוע",
@@ -125,8 +125,8 @@ function Column({ id, todos, index, loading }: Props) {
 										return null;
 									return (
 										<Draggable
-											key={todo.id}
-											draggableId={todo.id}
+											key={todo._id}
+											draggableId={todo._id}
 											index={index}
 										>
 											{(provided) => (
