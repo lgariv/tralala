@@ -1,18 +1,18 @@
 interface Board {
-	columns: Map<TypedColumn, Column>;
+	columns: Map<string, Column>;
 }
 
-type TypedColumn = "todo" | "inprogress" | "done"
+type TypedColumn = "todo" | "inprogress" | "done";
 
 interface Column {
-    id: TypedColumn;
+    id: string;
     todos: Todo[];
 }
 
 interface Todo {
-    id: string;
+    _id: string;
     title: string;
-    status: TypedColumn;
+    status: string;
     name: string;
     sender: string;
     pos: number

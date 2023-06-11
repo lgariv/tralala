@@ -3,26 +3,29 @@
 import { useBoardStore } from "@/store/BoardStore";
 import { useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
-import { useUser } from "@clerk/nextjs";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import Column from "./Column";
 
 function Board() {
-	const [board, getBoard, setBoardState, updateTodoInDB, setNewTaskSubmitterInput] = useBoardStore(
+	const [board, getBoard, setBoardState, updateTodoInDB, newTaskSubmitterInput, setNewTaskSubmitterInput] = useBoardStore(
 		(state) => [
 			state.board,
 			state.getBoard,
 			state.setBoardState,
 			state.updateTodoInDB,
+			state.newTaskSubmitterInput,
 			state.setNewTaskSubmitterInput
 		]
 	);
-	const { isLoaded, isSignedIn, user } = useUser();
+	const { user, error, isLoading } = useUser();
 	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		if (user) setNewTaskSubmitterInput(user["firstName"] !== "זירה" ? user["firstName"]! : "");
+		if (!isLoading && user && newTaskSubmitterInput === "")
+			setNewTaskSubmitterInput(user.nickname!);
 		setLoading(board.columns.size === 0);
-	}, [isLoaded, isSignedIn, board]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isLoading, user, board]);
 
 	useEffect(() => {
 		getBoard();
@@ -32,6 +35,7 @@ function Board() {
 		}, 10000);
 
 		return () => clearInterval(intervalId);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleOnDragEnd = (result: DropResult) => {
@@ -39,18 +43,6 @@ function Board() {
 
 		// Check if user dragged card outside of board
 		if (!destination) return;
-
-		// Handle column drag
-		// if (type === "column") {
-		// 	const entries = Array.from(board.columns.entries());
-		// 	const [removed] = entries.splice(source.index, 1);
-		// 	entries.splice(destination.index, 0, removed);
-		// 	const rearrangedColumns = new Map(entries);
-		// 	setBoardState({
-		// 		...board,
-		// 		columns: rearrangedColumns,
-		// 	});
-		// }
 
 		// Handle card drag
 		if (type === "card") {
@@ -87,7 +79,7 @@ function Board() {
 				newColumns.set(startCol.id, newCol);
 
 				// Update in DB
-				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index);
+				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index, null, null, null);
 
 				setBoardState({ ...board, columns: newColumns });
 			} else {
@@ -108,7 +100,7 @@ function Board() {
 				});
 
 				// Update in DB
-				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index);
+				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index, null, null, null);
 
 				setBoardState({ ...board, columns: newColumns });
 			}
@@ -143,7 +135,7 @@ function Board() {
 						{Array.from(dummyArray.entries()).map(([id, column], index) => (
 							<Column
 								key={id}
-								id={column.id as TypedColumn}
+								id={column.id as string}
 								todos={column.todos}
 								index={index}
 								loading={true}

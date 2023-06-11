@@ -8,16 +8,17 @@ import TodoCard from "./TodoCard";
 import { useBoardStore } from "@/store/BoardStore";
 import { useModalStore } from "@/store/ModalStore";
 import { useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 type Props = {
-	id: TypedColumn;
+	id: string;
 	todos: Todo[];
 	index: number;
 	loading?: boolean;
 };
 
 const idToColumnText: {
-	[key in TypedColumn]: string;
+	[key in string]: string;
 } = {
 	todo: "משימות",
 	inprogress: "בביצוע",
@@ -25,14 +26,22 @@ const idToColumnText: {
 };
 
 function Column({ id, todos, index, loading }: Props) {
-	const [searchString, setNewTaskType, deleteTask] = useBoardStore((state) => [
-		state.searchString,
-		state.setNewTaskType,
-		state.deleteTask
+	const [searchString, setNewTaskType, deleteTask, deleteTasksetNewTaskInput, setNewTaskPerformerInput, setNewTaskSubmitterInput] = useBoardStore(
+		(state) => [
+			state.searchString,
+			state.setNewTaskType,
+			state.deleteTask,
+			state.setNewTaskInput,
+			state.setNewTaskPerformerInput,
+			state.setNewTaskSubmitterInput
+		]
+	);
+	const [openModal, setEditing] = useModalStore((state) => [
+		state.openModal,
+		state.setEditing,
 	]);
-
-	const [openModal] = useModalStore((state) => [state.openModal]);
 	const [isHovered, setIsHovered] = useState(false);
+	const { user, error, isLoading } = useUser();
 
 	const handleMouseEnter = () => {
 		setIsHovered(true);
@@ -44,12 +53,14 @@ function Column({ id, todos, index, loading }: Props) {
 
 	return (
 		<div>
-			<div className="p-2 rounded-2xl shadow-sm bg-white/50">
-				<h2 className="flex justify-between font-bold text-xl p-2">
+			<div className="p-2 rounded-2xl shadow-sm bg-white/50 dark:bg-gray-800/50">
+				<h2 className="flex justify-between font-bold text-xl p-2 dark:text-white">
 					{idToColumnText[id]}
 					<span
-						className={`text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal ${
-							isHovered && id === "done" ? "scale-110" : "scale-100"
+						className={`text-gray-500 bg-gray-200 dark:text-gray-200 dark:bg-gray-800 rounded-full px-2 py-1 text-sm font-normal ${
+							isHovered && id === "done"
+								? "scale-110"
+								: "scale-100"
 						} transition-all duration-00`}
 						onMouseEnter={handleMouseEnter}
 						onMouseLeave={handleMouseLeave}
@@ -114,8 +125,8 @@ function Column({ id, todos, index, loading }: Props) {
 										return null;
 									return (
 										<Draggable
-											key={todo.id}
-											draggableId={todo.id}
+											key={todo._id}
+											draggableId={todo._id}
 											index={index}
 										>
 											{(provided) => (
@@ -142,9 +153,14 @@ function Column({ id, todos, index, loading }: Props) {
 									<button
 										onClick={() => {
 											setNewTaskType(id);
+											deleteTasksetNewTaskInput("");
+											setNewTaskPerformerInput("");
+											if (!isLoading && user) setNewTaskSubmitterInput(user.nickname!);
+											else setNewTaskSubmitterInput("");
+											setEditing(false, null);
 											openModal();
 										}}
-										className="text-green-500 hover:text-green-600"
+										className="text-green-500 hover:text-green-600 transition-all duration-200"
 									>
 										<PlusCircleIcon className="h-10 w-10" />
 									</button>

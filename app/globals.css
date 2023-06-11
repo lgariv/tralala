@@ -2,36 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-.cl-card {
-    direction: rtl;
+.translate-image {
+	transform: translateX(calc(-100% + 3.5rem));
 }
 
-.cl-logoImage,
-.cl-internal-br64d7,
-.cl-internal-1n7zobh,
-.cl-internal-rx251b {
-    direction: ltr;
-}
-
-.cl-internal-u0g48b {
-    transform: scaleX(-1);
-}
-
-.cl-internal-1vi7rps {
-    padding-bottom: 1rem;
-}
-
-.cl-internal-18aek0g,
-.cl-internal-y2rcgc,
-.cl-internal-b3fm6y {
-    display: none;
-}
-
-.cl-internal-br64d7 {
-    height: 200%;
-}
-
-.cl-internal-11ewti4 {
-    height: 50px;
-    width: 50px;
+* :focus-visible,
+:focus {
+	outline: none !important;
+	box-shadow: none !important;
 }

@@ -1,114 +1,153 @@
 import { NextResponse } from "next/server";
-import { Client } from "pg";
-import { currentUser } from "@clerk/nextjs";
-// import { useBoardStore } from "@/store/BoardStore";
+import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 
-const client = new Client({
-	connectionString: process.env.POSTGRES_URL + "?sslmode=require",
-	ssl: {
-		rejectUnauthorized: false,
+type Dict = {
+	title: string,
+	status?: string,
+	pos?: number,
+	name?: string,
+	sender?: string,
+}
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(process.env.MONGODB_URI!, {
+	serverApi: {
+		version: ServerApiVersion.v1,
+		strict: true,
+		deprecationErrors: true,
 	},
 });
+const database = client.db("tralala");
+const collection = database.collection("todos");
 
-client.connect((err) => {
-	if (err) {
-		console.error("connection error", err.stack);
-	} else {
-		console.log("connected");
+async function connectToDB() {
+	try {
+		// ConnectToDB the client to the server	(optional starting in v4.7)
+		await client.connect();
+	} finally {
+		// Ensures that the client will close when you finish/error
+		// await client.close();
 	}
-});
-
-// client.query("LISTEN table_changes");
-
-// const tableChanged = useBoardStore((state) => state.tableChanged);
-
-// client.on("notification", (msg) => {
-// 	console.log(msg.channel); // foo
-// 	console.log(msg.payload); // bar!
-// 	// tableChanged();
-// });
+}
+connectToDB().catch(console.dir);
 
 export async function GET(request: Request) {
-	const user = await currentUser();
-	if (user && Number(JSON.stringify(user["createdAt"])) > 1685921561999) return NextResponse.json({ todos: {rows: []} });
-	const todos = await client.query('SELECT * FROM todos ORDER BY id ASC');
-	return NextResponse.json({ todos });
+	try {
+		const filter = {};
+		const coll = client.db("tralala").collection("todos");
+		const cursor = coll.find(filter);
+		const todos = await cursor.toArray();
+		return NextResponse.json({ todos: { rows: todos } });
+	} catch (e) {
+		return NextResponse.json({ todos: { rows: [] } });
+	}
 }
 
 export async function POST(request: Request) {
 	const body = await request.json();
 	if (body["requestType"].includes("updatePosition")) {
-		const todoID: string = body["id"];
+		const todoID: string = body["_id"];
 		const todoTitle: string = body["title"];
-		const todoOldColumn: string = body["oldStatus"];
-		const todoNewColumn: string = body["status"];
-		const todoOldPos: number = body["oldPosition"];
-		const todoNewPos: number = body["position"];
+		const todoOldColumn: string | null | undefined = body["oldStatus"];
+		const todoNewColumn: string | null | undefined = body["status"];
+		const todoOldPos: number | null | undefined = body["oldPosition"];
+		const todoNewPos: number | null | undefined = body["position"];
+		const todoNewPerformer: string | null | undefined = body["taskPerformer"];
+		const todoNewSubmitter: string | null | undefined = body["taskSubmitter"];
 
-		try {
-			await client.query(`
-				UPDATE todos SET pos = pos - 1 WHERE pos > '${todoOldPos}' AND status = '${todoOldColumn}';
-			`);
-		} catch (error) {
-			return NextResponse.json({ error });
+		console.log(todoOldPos, todoOldColumn, todoNewPos, todoNewColumn);
+		
+		if (todoOldPos!=null && todoOldColumn!=null && todoNewPos!=null && todoNewColumn!=null) {
+			try {
+				// Update the "pos" values using the $inc and $gt operators
+				await collection.updateMany(
+					{ pos: { $gt: todoOldPos }, status: todoOldColumn },
+					{ $inc: { pos: -1 } }
+				);
+			} catch (error) {
+				return NextResponse.json({ error });
+			}
+			try {
+				// Update the "pos" values using the $inc and $gte operators
+				await collection.updateMany(
+					{ pos: { $gte: todoNewPos }, status: todoNewColumn },
+					{ $inc: { pos: 1 } }
+				);
+			} catch (error) {
+				return NextResponse.json({ error });
+			}
 		}
 		try {
-			await client.query(`
-				UPDATE todos SET pos = pos + 1 WHERE pos >= '${todoNewPos}' AND status = '${todoNewColumn}';
-			`);
-		} catch (error) {
-			return NextResponse.json({ error });
-		}
-		try {
-			await client.query(`
-				UPDATE todos SET title = '${todoTitle}', status = '${todoNewColumn}', pos = '${todoNewPos}' WHERE id = '${todoID}';
-			`);
-		} catch (error) {
-			return NextResponse.json({ error });
-		}
+			const dict: Dict = {
+				title: todoTitle,
+			};
+			if (todoNewColumn!=null) dict["status"] = todoNewColumn;
+			if (todoNewPos!=null) dict["pos"] = todoNewPos;
+			if (todoNewPerformer!=null) dict["name"] = todoNewPerformer;
+			if (todoNewSubmitter != null) dict["sender"] = todoNewSubmitter;
 
-		const todos = await client.query("SELECT * FROM todos ORDER BY id ASC");
-		return NextResponse.json({ todos });
+			// Update the document matching the given todoID
+			await collection.updateOne(
+				{ _id: new ObjectId(todoID) },
+				{
+					$set: dict,
+				}
+			);
+
+			const filter = {};
+			const coll = client.db("tralala").collection("todos");
+			const cursor = coll.find(filter);
+			const todos = await cursor.toArray();
+			return NextResponse.json({ todos: { rows: todos } });
+		} catch (error) {
+			return NextResponse.json({ error });
+		}
 	} else if (body["requestType"].includes("update")) {		
-		const todoID: string = body["id"];
+		const todoID: string = body["_id"];
 		const todoTitle: string = body["title"];
 		const todoColumn: string = body["status"];
 
 		try {
-			await client.query(`
-				UPDATE todos
-				SET title = '${todoTitle}', status = '${todoColumn}'
-				WHERE id = '${todoID}';
-			`);
+			await collection.updateOne(
+				{ _id: new ObjectId(todoID) },
+				{
+					$set: {
+						title: todoTitle,
+						status: todoColumn,
+					},
+				}
+			);
+
+			const filter = {};
+			const coll = client.db("tralala").collection("todos");
+			const cursor = coll.find(filter);
+			const todos = await cursor.toArray();
+			return NextResponse.json({ todos: { rows: todos } });
 		} catch (error) {
 			return NextResponse.json({ error });
 		}
-
-		const todos = await client.query("SELECT * FROM todos ORDER BY id ASC");
-		return NextResponse.json({ todos });
 	} else if (body["requestType"].includes("delete")) {
-		const todoID: string = body["id"];
+		const todoID: string = body["_id"];
 		const todoOldColumn: string = body["oldStatus"];
 		const todoOldPos: number = body["oldPosition"];
 
 		try {
-			client.query(`
-				UPDATE todos SET pos = pos - 1 WHERE pos > '${todoOldPos}' AND status = '${todoOldColumn}';
-			`);
+			await collection.updateMany(
+				{ pos: { $gt: todoOldPos }, status: todoOldColumn },
+				{ $inc: { pos: -1 } }
+			);
 		} catch (error) {
 			return NextResponse.json({ error });
 		}
 		try {
-			client.query(`
-				DELETE FROM todos
-				WHERE id = '${todoID}';
-			`);
+			await collection.deleteOne({ _id: new ObjectId(todoID) });
+			const filter = {};
+			const coll = client.db("tralala").collection("todos");
+			const cursor = coll.find(filter);
+			const todos = await cursor.toArray();
+			return NextResponse.json({ todos: { rows: todos } });
 		} catch (error) {
 			return NextResponse.json({ error });
 		}
-
-		const todos = await client.query(`SELECT * FROM todos;`);
-		return NextResponse.json({ todos });
 	} else if (body["requestType"].includes("create")) {
 		const todoTitle: string = body["title"];
 		const todoColumn: string = body["status"];
@@ -116,12 +155,40 @@ export async function POST(request: Request) {
 		const todoSender: string = body["sender"];
 
 		try {
-			client.query(`INSERT INTO todos (title, status, name, sender) VALUES ('${todoTitle}', '${todoColumn}', '${todoName}', '${todoSender}');`);
+			// Retrieve the highest "pos" value for the specified "status" field
+			const highestPos = await collection
+				.aggregate([
+					{ $match: { status: todoColumn } },
+					{ $group: { _id: null, maxPos: { $max: "$pos" } } },
+				])
+				.toArray();
+
+			let newPos: number;
+			if (highestPos.length > 0) {
+				// Increment the highest "pos" value by 1
+				newPos = highestPos[0].maxPos + 1;
+			} else {
+				// If no documents with the specified "status" exist, set the initial value to 0
+				newPos = 0;
+			}
+
+			// Create the new document with the incremented "pos" value and specified "status"
+			const newDocument = {
+				title: todoTitle,
+				name: todoName,
+				sender: todoSender,
+				status: todoColumn,
+				pos: newPos,
+			};
+			const result = await collection.insertOne(newDocument);
+
+			const filter = {};
+			const coll = client.db("tralala").collection("todos");
+			const cursor = coll.find(filter);
+			const todos = await cursor.toArray();
+			return NextResponse.json({ todos: { rows: todos } });
 		} catch (error) {
 			return NextResponse.json({ error });
 		}
-
-		const todos = await client.query(`SELECT * FROM todos;`);
-		return NextResponse.json({ todos });
 	}
 }
