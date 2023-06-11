@@ -16,7 +16,7 @@ export const getTodosGroupedByColumn = async () => {
 		}
 
 		acc.get(todo.status)!.todos.push({
-			id: todo.id,
+			_id: todo._id,
 			title: todo.title,
 			name: todo.name,
 			status: todo.status,
@@ -25,10 +25,10 @@ export const getTodosGroupedByColumn = async () => {
 		});
 
 		return acc;
-	}, new Map<TypedColumn, Column>());
+	}, new Map<string, Column>());
 
 	// if columns doesnt have inprogress, todo and done, add them with empty todos
-	const columnTypes: TypedColumn[] = ["todo", "inprogress", "done"];
+	const columnTypes: string[] = ["todo", "inprogress", "done"];
 	for (const columnType of columnTypes) {
 		if (!columns.get(columnType)) {
 			columns.set(columnType, {

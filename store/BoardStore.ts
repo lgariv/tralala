@@ -3,10 +3,10 @@ import { create } from "zustand";
 
 type Dict = {
 	requestType: string;
-	id: string;
+	_id: string;
 	title?: string;
-	oldStatus?: TypedColumn;
-	status?: TypedColumn;
+	oldStatus?: string;
+	status?: string;
 	oldPosition?: number;
 	position?: number;
 	taskTitle?: string;
@@ -18,7 +18,7 @@ interface BoardState {
 	board: Board;
 	getBoard: () => void;
 	setBoardState: (board: Board) => void;
-	updateTodoInDB: (todo: Todo, oldStatus: TypedColumn | null | undefined, status: TypedColumn | null | undefined, oldPosition: number | null | undefined, position: number | null | undefined, taskTitle: string | null | undefined, taskPerformer: string | null | undefined, taskSubmitter: string | null | undefined) => void;
+	updateTodoInDB: (todo: Todo, oldStatus: string | null | undefined, status: string | null | undefined, oldPosition: number | null | undefined, position: number | null | undefined, taskTitle: string | null | undefined, taskPerformer: string | null | undefined, taskSubmitter: string | null | undefined) => void;
 	searchString: string;
 	setSearchString: (searchString: string) => void;
 	newTaskInput: string;
@@ -27,12 +27,12 @@ interface BoardState {
 	setNewTaskPerformerInput: (newTaskPerformerInput: string) => void;
 	newTaskSubmitterInput: string;
 	setNewTaskSubmitterInput: (newTaskSubmitterInput: string) => void;
-	newTaskType: TypedColumn;
-	setNewTaskType: (columnId: TypedColumn) => void;
+	newTaskType: string;
+	setNewTaskType: (columnId: string) => void;
 	deleteTask: (todoId: Todo) => void;
 	addTask: (
 		todo: string,
-		columnId: TypedColumn,
+		columnId: string,
 		taskPerformer: string,
 		taskSubmitter: string
 	) => void;
@@ -41,7 +41,7 @@ interface BoardState {
 
 export const useBoardStore = create<BoardState>((set) => ({
 	board: {
-		columns: new Map<TypedColumn, Column>(),
+		columns: new Map<string, Column>(),
 	},
 	getBoard: async () => {
 		const board = await getTodosGroupedByColumn();
@@ -53,7 +53,7 @@ export const useBoardStore = create<BoardState>((set) => ({
 	updateTodoInDB: async (todo, oldStatus?, status?, oldPosition?, position?, taskTitle?, taskPerformer?, taskSubmitter?) => {
 		var dict: Dict = {
 			requestType: "updatePosition",
-			id: todo.id,
+			_id: todo._id,
 		};
 
 		dict["title"] = taskTitle != null ? taskTitle : todo.title;
@@ -93,12 +93,12 @@ export const useBoardStore = create<BoardState>((set) => ({
 		set({ newTaskSubmitterInput }),
 
 	newTaskType: "todo",
-	setNewTaskType: (columnId: TypedColumn) => set({ newTaskType: columnId }),
+	setNewTaskType: (columnId: string) => set({ newTaskType: columnId }),
 
 	deleteTask: async (todo: Todo) => {
 		const raw = JSON.stringify({
 			requestType: "delete",
-			id: todo.id,
+			_id: todo._id,
 			oldStatus: todo.status,
 			oldPosition: todo.pos,
 		});
@@ -116,7 +116,7 @@ export const useBoardStore = create<BoardState>((set) => ({
 	},
 	addTask: async (
 		todo: string,
-		columnId: TypedColumn,
+		columnId: string,
 		taskPerformer: string,
 		taskSubmitter: string
 	) => {
