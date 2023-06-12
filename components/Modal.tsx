@@ -112,7 +112,7 @@ function Modal() {
 								</div>
 
 								{isEditing ? (
-									<hr className="border-gray-300 dark:border-gray-600 m-4" />
+									<hr className="border-gray-300 dark:border-gray-600 m-4 border-dashed" />
 								) : (
 									<TaskTypeRadioGroup />
 								)}
