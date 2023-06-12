@@ -18,6 +18,7 @@ const client = new MongoClient(process.env.MONGODB_URI!, {
 });
 const database = client.db("tralala");
 const collection = database.collection("todos");
+const triggerCollection = database.collection("updated");
 
 async function connectToDB() {
 	try {
@@ -93,6 +94,11 @@ export async function POST(request: Request) {
 				}
 			);
 
+			const newTriggerDocument = {
+				time: Date()
+			};
+			await triggerCollection.insertOne(newTriggerDocument);
+
 			const filter = {};
 			const coll = client.db("tralala").collection("todos");
 			const cursor = coll.find(filter);
@@ -117,6 +123,11 @@ export async function POST(request: Request) {
 				}
 			);
 
+			const newTriggerDocument = {
+				time: Date(),
+			};
+			await triggerCollection.insertOne(newTriggerDocument);
+
 			const filter = {};
 			const coll = client.db("tralala").collection("todos");
 			const cursor = coll.find(filter);
@@ -140,6 +151,12 @@ export async function POST(request: Request) {
 		}
 		try {
 			await collection.deleteOne({ _id: new ObjectId(todoID) });
+
+			const newTriggerDocument = {
+				time: Date(),
+			};
+			await triggerCollection.insertOne(newTriggerDocument);
+
 			const filter = {};
 			const coll = client.db("tralala").collection("todos");
 			const cursor = coll.find(filter);
@@ -180,7 +197,12 @@ export async function POST(request: Request) {
 				status: todoColumn,
 				pos: newPos,
 			};
-			const result = await collection.insertOne(newDocument);
+			await collection.insertOne(newDocument);
+
+			const newTriggerDocument = {
+				time: Date(),
+			};
+			await triggerCollection.insertOne(newTriggerDocument);
 
 			const filter = {};
 			const coll = client.db("tralala").collection("todos");

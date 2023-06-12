@@ -1,9 +1,10 @@
 "use client";
 
 import { useBoardStore } from "@/store/BoardStore";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import * as Realm from "realm-web";
 import Column from "./Column";
 
 function Board() {
@@ -14,29 +15,49 @@ function Board() {
 			state.setBoardState,
 			state.updateTodoInDB,
 			state.newTaskSubmitterInput,
-			state.setNewTaskSubmitterInput
-		]
-	);
+		state.setNewTaskSubmitterInput,
+	]);
 	const { user, error, isLoading } = useUser();
 	const [loading, setLoading] = useState<boolean>(true);
+	const app = new Realm.App({ id: "application-0-xxqey" });
+	const [events, setEvents] = useState<ChangeEvent<any>[]>([]);
 
 	useEffect(() => {
 		if (!isLoading && user && newTaskSubmitterInput === "")
 			setNewTaskSubmitterInput(user.nickname!);
 		setLoading(board.columns.size === 0);
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isLoading, user, board]);
 
 	useEffect(() => {
 		getBoard();
 
-		const intervalId = setInterval(() => {
-			getBoard();
-		}, 10000);
+		const login = async () => {
+			// Authenticate anonymously
+			const credentials = Realm.Credentials.apiKey("fq38TRxGrgDcLVQTbNuO1Sv3TsYw4LmEx3X5VjWTtIvJMadc3duaJ42982r59vTE");
+			const user = await app.logIn(credentials);
 
-		return () => clearInterval(intervalId);
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+			const mongodb = app.currentUser!.mongoClient("mongodb-atlas");
+			const collection = mongodb.db("tralala").collection("updated"); // Everytime a change happens in the stream, add it to the list of events
+
+			for await (const change of collection.watch() as AsyncIterable<ChangeEvent<any>>) {
+				console.log("New event ::", change);
+				setEvents((events) => [...events, change]);
+			}
+		};
+		login();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		getBoard();
+		try {
+			console.log("test ::", Object(Array.from(events).reverse()[0])["updateDescription"]["updatedFields"].entries()[0].key);
+		}
+		catch (e) { };
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [events]);
+	
 
 	const handleOnDragEnd = (result: DropResult) => {
 		const { destination, source, type } = result;
@@ -79,7 +100,16 @@ function Board() {
 				newColumns.set(startCol.id, newCol);
 
 				// Update in DB
-				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index, null, null, null);
+				updateTodoInDB(
+					todoMoved,
+					startCol.id,
+					finishCol.id,
+					source.index,
+					destination.index,
+					null,
+					null,
+					null
+				);
 
 				setBoardState({ ...board, columns: newColumns });
 			} else {
@@ -100,7 +130,16 @@ function Board() {
 				});
 
 				// Update in DB
-				updateTodoInDB(todoMoved, startCol.id, finishCol.id, source.index, destination.index, null, null, null);
+				updateTodoInDB(
+					todoMoved,
+					startCol.id,
+					finishCol.id,
+					source.index,
+					destination.index,
+					null,
+					null,
+					null
+				);
 
 				setBoardState({ ...board, columns: newColumns });
 			}
@@ -121,7 +160,7 @@ function Board() {
 			todos: [],
 		},
 	];
-	
+
 	return loading ? (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
 			<Droppable droppableId="board" direction="horizontal" type="column">
@@ -132,15 +171,17 @@ function Board() {
 						{...provided.droppableProps}
 						ref={provided.innerRef}
 					>
-						{Array.from(dummyArray.entries()).map(([id, column], index) => (
-							<Column
-								key={id}
-								id={column.id as string}
-								todos={column.todos}
-								index={index}
-								loading={true}
-							/>
-						))}
+						{Array.from(dummyArray.entries()).map(
+							([id, column], index) => (
+								<Column
+									key={id}
+									id={column.id as string}
+									todos={column.todos}
+									index={index}
+									loading={true}
+								/>
+							)
+						)}
 					</div>
 				)}
 			</Droppable>
