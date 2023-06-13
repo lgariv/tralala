@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic';
 const Board = dynamic(() => import('@/components/Board'));
 const Header = dynamic(() => import('@/components/Header'));
+const Modal = dynamic(() => import("@/components/Modal"), { ssr: false });
 
 export default function Home() {
 	return (
@@ -10,6 +11,8 @@ export default function Home() {
 
 			{/* Board */}
 			<Board />
+
+			<Modal />
 		</main>
 	);
 }

@@ -1,5 +1,3 @@
-import dynamic from 'next/dynamic';
-const Modal = dynamic(() => import('@/components/Modal'), {ssr: false});
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "./globals.css";
 
@@ -27,7 +25,6 @@ export default function RootLayout({
 				</head>
 				<body className="bg-[#F5F6F8] dark:bg-[#151516]">
 					{children}
-					<Modal />
 				</body>
 			</html>
 		</UserProvider>
