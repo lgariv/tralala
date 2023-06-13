@@ -1,4 +1,5 @@
-import Modal from "@/components/Modal";
+import dynamic from 'next/dynamic';
+const Modal = dynamic(() => import('@/components/Modal'), {ssr: false});
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import "./globals.css";
 

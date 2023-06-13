@@ -1,5 +1,6 @@
-import Board from "@/components/Board";
-import Header from "@/components/Header";
+import dynamic from 'next/dynamic';
+const Board = dynamic(() => import('@/components/Board'));
+const Header = dynamic(() => import('@/components/Header'));
 
 export default function Home() {
 	return (

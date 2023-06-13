@@ -1,11 +1,12 @@
 "use client";
 
+import dynamic from 'next/dynamic';
 import { useBoardStore } from "@/store/BoardStore";
 import { ChangeEvent, useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import * as Realm from "realm-web";
-import Column from "./Column";
+const Column = dynamic(() => import('./Column'));
 
 function Board() {
 	const [board, getBoard, setBoardState, updateTodoInDB, newTaskSubmitterInput, setNewTaskSubmitterInput] = useBoardStore(
