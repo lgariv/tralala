@@ -3,6 +3,7 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import Image from "next/image";
 
 const solutions = [
 	{
@@ -16,14 +17,17 @@ function UserAvatar() {
 
 	return (
 		<>
-			{user && user.picture && (
+			{user && (
 				<Popover className="relative border-none border-transparent ring-0 focus:ring-transparent focus:border-transparent focus:ring-0">
 					{({ open }) => (
 						<>
 							<Popover.Button className="border-none border-transparent ring-0 focus:ring-transparent focus:border-transparent focus:ring-0">
-								<img
-									className="rounded-full items-center justify-center w-14 h-14"
-									src={user!.picture!}
+								<Image
+									className="rounded-full items-center justify-center w-[50px] h-[50px]"
+									src={user?.picture!}
+									width={50}
+									height={50}
+									loading="eager"
 									alt="Profile"
 								/>
 							</Popover.Button>

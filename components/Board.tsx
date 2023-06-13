@@ -41,7 +41,6 @@ function Board() {
 			const collection = mongodb.db("tralala").collection("updated"); // Everytime a change happens in the stream, add it to the list of events
 
 			for await (const change of collection.watch() as AsyncIterable<ChangeEvent<any>>) {
-				console.log("New event ::", change);
 				setEvents((events) => [...events, change]);
 			}
 		};
@@ -51,10 +50,6 @@ function Board() {
 
 	useEffect(() => {
 		getBoard();
-		try {
-			console.log("test ::", Object(Array.from(events).reverse()[0])["updateDescription"]["updatedFields"].entries()[0].key);
-		}
-		catch (e) { };
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [events]);
 	

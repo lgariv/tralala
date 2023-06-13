@@ -20,7 +20,7 @@ const database = client.db("tralala");
 const collection = database.collection("todos");
 const triggerCollection = database.collection("updated");
 
-async function connectToDB() {
+const connectToDB = async function connectToDB() {
 	try {
 		// ConnectToDB the client to the server	(optional starting in v4.7)
 		await client.connect();
@@ -54,8 +54,6 @@ export async function POST(request: Request) {
 		const todoNewPos: number | null | undefined = body["position"];
 		const todoNewPerformer: string | null | undefined = body["taskPerformer"];
 		const todoNewSubmitter: string | null | undefined = body["taskSubmitter"];
-
-		console.log(todoOldPos, todoOldColumn, todoNewPos, todoNewColumn);
 		
 		if (todoOldPos!=null && todoOldColumn!=null && todoNewPos!=null && todoNewColumn!=null) {
 			try {

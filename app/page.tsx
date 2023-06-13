@@ -1,6 +1,5 @@
 import Board from "@/components/Board";
 import Header from "@/components/Header";
-import { Analytics } from "@vercel/analytics/react";
 
 export default function Home() {
 	return (
@@ -10,8 +9,6 @@ export default function Home() {
 
 			{/* Board */}
 			<Board />
-
-			<Analytics />
 		</main>
 	);
 }
