@@ -20,7 +20,7 @@ function Board() {
 	]);
 	const { user, error, isLoading } = useUser();
 	const [loading, setLoading] = useState<boolean>(true);
-	const app = new Realm.App({ id: "application-0-xxqey" });
+	const app = new Realm.App({ id: "application-0-gwpfz" });
 	const [events, setEvents] = useState<ChangeEvent<any>[]>([]);
 
 	useEffect(() => {
@@ -35,7 +35,7 @@ function Board() {
 
 		const login = async () => {
 			// Authenticate anonymously
-			const credentials = Realm.Credentials.apiKey("fq38TRxGrgDcLVQTbNuO1Sv3TsYw4LmEx3X5VjWTtIvJMadc3duaJ42982r59vTE");
+			const credentials = Realm.Credentials.apiKey("bc5w9fgbleeoOL1Y632OyLToW1cAOP4O9BBA1g20EJXJFN745WsAzUSY023v6KeQ");
 			const user = await app.logIn(credentials);
 
 			const mongodb = app.currentUser!.mongoClient("mongodb-atlas");
