@@ -1,12 +1,12 @@
 "use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { useBoardStore } from "@/store/BoardStore";
 import { ChangeEvent, useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import * as Realm from "realm-web";
-const Column = dynamic(() => import('./Column'), {ssr: false});
+const Column = dynamic(() => import("./Column"), {ssr: false});
 
 function Board() {
 	const [board, getBoard, setBoardState, updateTodoInDB, newTaskSubmitterInput, setNewTaskSubmitterInput] = useBoardStore(
@@ -42,6 +42,7 @@ function Board() {
 			const collection = mongodb.db("tralala").collection("updated"); // Everytime a change happens in the stream, add it to the list of events
 
 			for await (const change of collection.watch() as AsyncIterable<ChangeEvent<any>>) {
+				app.currentUser?.refreshAccessToken();
 				setEvents((events) => [...events, change]);
 			}
 		};
@@ -53,7 +54,6 @@ function Board() {
 		getBoard();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [events]);
-	
 
 	const handleOnDragEnd = (result: DropResult) => {
 		const { destination, source, type } = result;
