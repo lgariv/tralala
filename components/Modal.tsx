@@ -1,13 +1,13 @@
 "use client";
 
-import { FormEvent, Fragment } from "react";
+import { FormEvent, Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useModalStore } from "@/store/ModalStore";
 import { useBoardStore } from "@/store/BoardStore";
 import TaskTypeRadioGroup from "./TaskTypeRadioGroup";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { Session } from "next-auth";
 
-function Modal() {
+function Modal({ user }: { user: Session["user"] }) {
 	const [isOpen, closeModal, isEditing, task] = useModalStore((state) => [
 		state.isOpen,
 		state.closeModal,
@@ -24,24 +24,23 @@ function Modal() {
 		state.newTaskType,
 		state.newTaskSubmitterInput,
 		state.setNewTaskSubmitterInput,
-		state.getBoard
+		state.getBoard,
 	]);
-	const { user, error, isLoading } = useUser();
 
-	const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!newTaskInput || !newTaskPerformerInput) return;
 
 		// add task
-		if (!isEditing) addTask(newTaskInput, newTaskType, newTaskPerformerInput, newTaskSubmitterInput);
+		if (!isEditing) addTask(newTaskInput, newTaskType, newTaskPerformerInput, newTaskSubmitterInput, user!);
 		// update task
 		else updateTodoInDB(task!, null, null, null, null, newTaskInput, newTaskPerformerInput, newTaskSubmitterInput);
 		setNewTaskInput("");
 		setNewTaskPerformerInput("");
-		if (!isLoading && user) setNewTaskSubmitterInput(user.nickname!);
+		if (user) setNewTaskSubmitterInput(user.nickname!);
 		else setNewTaskSubmitterInput("");
 		closeModal();
-	}
+	};
 
 	return (
 		// Use the `Transition` component at the root level

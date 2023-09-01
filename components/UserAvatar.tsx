@@ -1,20 +1,20 @@
 "use client";
 
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import Image from "next/image";
+import { Session } from "next-auth";
+import Avatar from "react-avatar";
+import { signOut } from "next-auth/react";
 
 const solutions = [
 	{
 		name: "התנתק",
-		href: "/api/auth/logout",
+		href: "/api/auth/signout",
 	},
 ];
 
-function UserAvatar() {
-	const { user, error, isLoading } = useUser();
-
+function UserAvatar({ user }: { user: Session["user"] }) {
 	return (
 		<>
 			{user && (
@@ -22,14 +22,11 @@ function UserAvatar() {
 					{({ open }) => (
 						<>
 							<Popover.Button className="border-none border-transparent ring-0 focus:ring-transparent focus:border-transparent focus:ring-0">
-								<Image
-									className="rounded-full items-center justify-center w-[50px] h-[50px]"
-									src={user?.picture!}
-									width={50}
-									height={50}
-									loading="eager"
-									alt="Profile"
-								/>
+								{user?.picture ? (
+									<Avatar src={user?.picture} size="50" round={true} />
+								) : (
+									<Avatar name={user?.nickname} size="50" round={true} />
+								)}
 							</Popover.Button>
 							<Transition
 								as={Fragment}
@@ -46,7 +43,7 @@ function UserAvatar() {
 											{solutions.map((item) => (
 												<a
 													key={item.name}
-													href={item.href}
+													onClick={() => signOut()}
 													className="-m-3 flex items-center rounded-lg p-3 transition duration-150 ease-in-out hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring focus-visible:ring-transparent focus:ring-0"
 												>
 													<div className="mr-4">

@@ -168,6 +168,7 @@ export async function POST(request: Request) {
 		const todoColumn: string = body["status"];
 		const todoName: string = body["name"];
 		const todoSender: string = body["sender"];
+		const todoSenderRole: string = body["senderRole"];
 
 		try {
 			// Retrieve the highest "pos" value for the specified "status" field
@@ -194,6 +195,7 @@ export async function POST(request: Request) {
 				sender: todoSender,
 				status: todoColumn,
 				pos: newPos,
+				managingRole: todoSenderRole,
 			};
 			await collection.insertOne(newDocument);
 

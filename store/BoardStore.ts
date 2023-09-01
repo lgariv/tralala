@@ -34,7 +34,8 @@ interface BoardState {
 		todo: string,
 		columnId: string,
 		taskPerformer: string,
-		taskSubmitter: string
+		taskSubmitter: string,
+		user: User,
 	) => void;
 	tableChanged: () => void;
 }
@@ -118,14 +119,16 @@ export const useBoardStore = create<BoardState>((set) => ({
 		todo: string,
 		columnId: string,
 		taskPerformer: string,
-		taskSubmitter: string
+		taskSubmitter: string,
+		user: User,
 	) => {
 		const raw = JSON.stringify({
 			requestType: "create",
 			title: todo,
 			status: columnId,
 			name: taskPerformer,
-			sender: taskSubmitter
+			sender: taskSubmitter,
+			senderRole: user.role,
 		});
 
 		await fetch("/api/vercelDBConnection", {

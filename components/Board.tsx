@@ -2,13 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { useBoardStore } from "@/store/BoardStore";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import * as Realm from "realm-web";
 const Column = dynamic(() => import("./Column"), {ssr: false});
+import { Session } from "next-auth";
 
-function Board() {
+function Board({ user }: { user: Session["user"] }) {
 	const [board, getBoard, setBoardState, updateTodoInDB, newTaskSubmitterInput, setNewTaskSubmitterInput] = useBoardStore(
 		(state) => [
 			state.board,
@@ -18,48 +17,24 @@ function Board() {
 			state.newTaskSubmitterInput,
 		state.setNewTaskSubmitterInput,
 	]);
-	const { user, error, isLoading } = useUser();
 	const [loading, setLoading] = useState<boolean>(true);
-	const app = new Realm.App({ id: "application-0-gwpfz" });
-	const [events, setEvents] = useState<ChangeEvent<any>[]>([]);
 
 	useEffect(() => {
-		if (!isLoading && user && newTaskSubmitterInput === "")
-			setNewTaskSubmitterInput(user.nickname!);
 		setLoading(board.columns.size === 0);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isLoading, user, board]);
+	}, [board]);
 
 	useEffect(() => {
 		getBoard();
-
-		const login = async () => {
-			// Authenticate anonymously
-			const credentials = Realm.Credentials.apiKey("bc5w9fgbleeoOL1Y632OyLToW1cAOP4O9BBA1g20EJXJFN745WsAzUSY023v6KeQ");
-			const user = await app.logIn(credentials);
-
-			const mongodb = app.currentUser!.mongoClient("mongodb-atlas");
-			const collection = mongodb.db("tralala").collection("updated"); // Everytime a change happens in the stream, add it to the list of events
-
-			for await (const change of collection.watch() as AsyncIterable<ChangeEvent<any>>) {
-				app.currentUser?.refreshAccessToken();
-				setEvents((events) => [...events, change]);
-			}
-		};
-		login();
+		if (user) setNewTaskSubmitterInput(user.nickname!);
 
 		const interval = setInterval(() => {
-			login();
+			getBoard();
 		}, 300000);
 
 		return () => clearInterval(interval);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	useEffect(() => {
-		getBoard();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [events]);
 
 	const handleOnDragEnd = (result: DropResult) => {
 		const { destination, source, type } = result;
@@ -181,6 +156,7 @@ function Board() {
 									todos={column.todos}
 									index={index}
 									loading={true}
+									user={user!}
 								/>
 							)
 						)}
@@ -199,14 +175,22 @@ function Board() {
 						ref={provided.innerRef}
 					>
 						{Array.from(board.columns.entries()).map(
-							([id, column], index) => (
-								<Column
-									key={id}
-									id={id}
-									todos={column.todos}
-									index={index}
-								/>
-							)
+							([id, column], index) => {
+								// Filter todos with role matching "cellular"
+								const filteredTodos = column.todos.filter(
+									(todo) => todo.managingRole === user!.role
+								);
+
+								return (
+									<Column
+										key={id}
+										id={id}
+										todos={filteredTodos}
+										index={index}
+										user={user!}
+									/>
+								);
+							}
 						)}
 					</div>
 				)}

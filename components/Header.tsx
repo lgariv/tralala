@@ -7,8 +7,9 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useBoardStore } from "@/store/BoardStore";
 import { useEffect, useState } from "react";
 import UserAvatar from "./UserAvatar";
+import { Session } from "next-auth";
 
-function Header() {
+function Header({ user }: { user: Session["user"] }) {
 	const [board, searchString, setSearchString] = useBoardStore((state) => [
 		state.board,
 		state.searchString,
@@ -31,7 +32,6 @@ function Header() {
 		setDoneCount(entries[2][1]["todos"].length);
 		setLoading(false);
 	}, [board]);
-	
 
 	return (
 		<header className="pb-2 md:pb-5">
@@ -68,7 +68,7 @@ function Header() {
 					</form>
 
 					{/* Avatar  */}
-					<UserAvatar />
+					<UserAvatar user={user} />
 				</div>
 			</div>
 		</header>
