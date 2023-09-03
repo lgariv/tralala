@@ -46,7 +46,7 @@ function Header({ user }: { user: Session["user"] }) {
 					<Image
 						priority={true}
 						src={lightImage}
-						alt="Tralala logo"
+						alt="Trinity logo"
 						width={300}
 						height={100}
 						className="w-44 md:w-56 pb-10 md:pb-0 object-contain"
