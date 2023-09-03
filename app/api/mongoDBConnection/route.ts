@@ -6,7 +6,6 @@ const client = new MongoClient(process.env.MONGODB_URI!);
 
 export async function POST(request: Request) {
 	const body = await request.json();
-    console.log(`body :: ${body}`);
 
 	// User sign-in
 	try {

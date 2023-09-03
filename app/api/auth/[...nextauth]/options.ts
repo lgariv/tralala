@@ -67,7 +67,9 @@ export const options: NextAuthOptions = {
 				const usersCollection = mongoClient
 					.db("usersDB")
 					.collection("users");
-				userFromDB = await usersCollection.findOne<User | null | undefined>({
+				userFromDB = await usersCollection.findOne<
+					User | null | undefined
+				>({
 					_id: new ObjectId(token.sub),
 				});
 			} catch (error) {
